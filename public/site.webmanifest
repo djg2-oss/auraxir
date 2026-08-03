@@ -1,0 +1,11 @@
+{
+  "name": "Auraxir Elite Quality Service",
+  "short_name": "Auraxir",
+  "description": "Superior elite website & app production. Gold-standard polish. Discreet white-label delivery.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b0b0f",
+  "theme_color": "#0b0b0f",
+  "lang": "en-US",
+  "categories": ["business", "productivity"]
+}

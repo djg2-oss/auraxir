@@ -1,0 +1,8 @@
+# Auraxir — crawl policy
+User-agent: *
+Allow: /
+Disallow: /builder/
+Disallow: /preview/
+Disallow: /auth/
+
+Sitemap: https://auraxir.com/sitemap.xml
