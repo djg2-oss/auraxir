@@ -322,8 +322,21 @@ function StartWizardPage() {
                       blurb={b.blurb}
                       selected={needs.businessType === b.id}
                       onClick={() => {
-                        setNeeds({ businessType: b.id as BusinessType });
-                        setGuidePath(pathFromBusinessType(b.id as BusinessType));
+                        const bt = b.id as BusinessType;
+                        const path = pathFromBusinessType(bt);
+                        const defaults = path ? guideDefaultsForPath(path) : {};
+                        setNeeds({
+                          businessType: bt,
+                          productIntent:
+                            needs.productIntent ??
+                            (defaults.productIntent as ProductIntent | undefined) ??
+                            "website",
+                          goals:
+                            needs.goals.length > 0
+                              ? needs.goals
+                              : ((defaults.goals as typeof needs.goals) ?? needs.goals),
+                        });
+                        if (path) setGuidePath(path);
                       }}
                     />
                   ))}
@@ -590,6 +603,11 @@ function StartWizardPage() {
               </div>
             )}
 
+            {stepId === "capacity" && !canNext && (
+              <p className="text-xs text-[var(--color-fg-subtle)]">
+                Select traffic, subscription band, skill, and accept content responsibility to continue.
+              </p>
+            )}
             <div className="flex flex-col-reverse gap-3 border-t border-[var(--color-border)] pt-5 sm:flex-row sm:justify-between">
               <Button
                 type="button"
@@ -601,7 +619,19 @@ function StartWizardPage() {
                 Back
               </Button>
               <Button type="button" disabled={!canNext} onClick={onContinue}>
-                {step === steps.length - 1 ? "Show success plan" : "Continue"}
+                {step === steps.length - 1
+                  ? "See best fit"
+                  : stepId === "path"
+                    ? "Continue to you"
+                    : stepId === "identity"
+                      ? "Continue"
+                      : stepId === "outcomes"
+                        ? "Lock the look"
+                        : stepId === "look"
+                          ? mode === "full"
+                            ? "Set scale"
+                            : "See best fit"
+                          : "Continue"}
                 <ArrowRight />
               </Button>
             </div>

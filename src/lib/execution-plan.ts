@@ -1,8 +1,8 @@
 /**
  * Auraxir Elite — Polished execution plan
- * Single source of truth for what we ship and what is done.
+ * Customer-facing roadmap language only.
  */
-export type ExecStatus = "done" | "active" | "next" | "later";
+export type ExecStatus = "done" | "active" | "next";
 
 export interface ExecItem {
   id: string;
@@ -18,11 +18,14 @@ export interface ExecPhase {
   items: ExecItem[];
 }
 
+export const EXECUTION_NORTH_STAR =
+  "Customers get the best fit and the look they desire under the Auraxir premium name — and we deliver the promise.";
+
 export const EXECUTION_PLAN: ExecPhase[] = [
   {
     id: "foundation",
     title: "Phase 1 · Foundation",
-    outcome: "Elite brand, , premium catalog, G2P look engine",
+    outcome: "Elite brand, premium catalog, G2P look engine",
     items: [
       {
         id: "brand",
@@ -38,8 +41,8 @@ export const EXECUTION_PLAN: ExecPhase[] = [
       },
       {
         id: "g2p",
-        title: "Auraxir G2P AI v1.0-elite-sites",
-        detail: "8 trained style systems · mood/desire → production tokens",
+        title: "Auraxir G2P AI v1.1-elite",
+        detail: "Trained style systems · mood/desire → production tokens",
         status: "done",
       },
       {
@@ -48,108 +51,91 @@ export const EXECUTION_PLAN: ExecPhase[] = [
         detail: "Auraxir-branded secure paths on flagship & apps",
         status: "done",
       },
-    ],
-  },
-  {
-    id: "funnel",
-    title: "Phase 2 · Success funnel",
-    outcome: "Attract → Capture → Plan → Build → Ship with higher completion",
-    items: [
       {
         id: "pipeline",
-        title: "Unified pipeline orchestrator",
-        detail: "runElitePipeline: match + G2P + economics in one plan",
+        title: "Success pipeline",
+        detail: "Match + G2P + economics in one plan",
         status: "done",
       },
       {
-        id: "express",
-        title: "Express match (2 steps)",
-        detail: "Smart defaults for goals, traffic, budget, energy",
-        status: "done",
-      },
-      {
-        id: "full",
-        title: "Full match (4 steps)",
-        detail: "Identity → Outcomes → Look → Capacity",
-        status: "done",
-      },
-      {
-        id: "plan-page",
-        title: "Success plan page",
-        detail: "Single CTA into builder with dual fit scores",
+        id: "guide",
+        title: "Concierge guide",
+        detail: "Business or personal path → best-fit production line",
         status: "done",
       },
     ],
   },
   {
-    id: "polish",
-    title: "Phase 3 · Polish & execute",
-    outcome: "Production-ready demo quality, verified flows, crisp UX",
+    id: "elite-ops",
+    title: "Phase 2 · Elite ops",
+    outcome: "Shield, Always-On, Imago, legal, first customers live",
     items: [
       {
-        id: "flow-verify",
-        title: "Verify express → plan → builder → publish",
-        detail: "Browser-driven happy path with clean console",
+        id: "shield",
+        title: "Auraxir Shield",
+        detail: "Elite encryption layer stacked on production baselines",
         status: "done",
       },
       {
-        id: "prod-score",
-        title: "Production boost on publish",
-        detail: "Additive SEO, CTAs, density — never strip features",
+        id: "always-on",
+        title: "Always-On dual FE/BE",
+        detail: "Stay online when continuous uptime is required",
         status: "done",
       },
       {
-        id: "mobile",
-        title: "Mobile viewport check (~390px)",
-        detail: "No horizontal overflow; primary CTAs usable",
+        id: "imago",
+        title: "Imago image stages",
+        detail: "Presence, Lookbook, Desire, Reputation, Atelier, Spotlight",
         status: "done",
       },
       {
-        id: "build",
-        title: "Production build green",
-        detail: "npm run build / typecheck pass for deploy target",
+        id: "legal",
+        title: "Legal stack",
+        detail: "Terms, AUP, Adult addendum, indemnity, privacy, DMCA",
         status: "done",
+      },
+      {
+        id: "first-customer",
+        title: "First customer live",
+        detail: "Founder as customer #1 — full elite path verified",
+        status: "active",
       },
     ],
   },
   {
     id: "scale",
-    title: "Phase 4 · Scale (next)",
-    outcome: "Deeper G2P training loop, multi-project ops, more lines later",
+    title: "Phase 3 · Scale",
+    outcome: "Deeper G2P training loop, multi-project ops, billing",
     items: [
       {
         id: "g2p-feedback",
         title: "G2P feedback from publish scores",
-        detail: "Weight styles that convert after go-live",
+        detail: "Close the loop from live quality back into style ranking",
         status: "next",
       },
       {
-        id: "ops-dashboard",
-        title: "Portfolio performance view",
-        detail: "Portfolio view of plans and launch status",
+        id: "billing",
+        title: "Subscription billing",
+        detail: "Retail invoices under Auraxir; host settlement internal",
         status: "next",
       },
       {
-        id: "phase2-lines",
-        title: "Later-phase engines only if elite",
-        detail: "Still no toys — expand catalog carefully",
-        status: "later",
+        id: "provision",
+        title: "Host provision playbooks",
+        detail: "Ops-only maps from Auraxir line → host action",
+        status: "next",
       },
     ],
   },
-] as const;
-
-export const EXECUTION_NORTH_STAR =
-  "Customers get the best fit and the look they desire under the Auraxir premium name — and we deliver the promise.";
+];
 
 export function executionProgress() {
   const items = EXECUTION_PLAN.flatMap((p) => p.items);
   const done = items.filter((i) => i.status === "done").length;
   const active = items.filter((i) => i.status === "active").length;
-  return {
-    done,
-    active,
-    total: items.length,
-    percent: Math.round((done / items.length) * 100),
-  };
+  const total = items.length;
+  const percent = total ? Math.round((done / total) * 100) : 0;
+  return { done, active, total, percent };
 }
+
+export const EXECUTION_PROMISE = EXECUTION_NORTH_STAR;
