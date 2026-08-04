@@ -1,11 +1,23 @@
 /**
  * Elite Quality Service standard — customer promise only.
  * Absolute premium builds: pro design GUI + real API on every line.
+ * Grow with user wishes — only after homework proves elite status to deliver.
  */
 export const ELITE = {
   standard: "Elite Quality Service",
   bar: "Elite Quality Service · Absolute premium · Pro GUI + API · We cost more for the elite",
+  /** Grow with user wishes — deliver only at elite status after homework */
+  doctrine: {
+    growth: "We grow with the wishes of the user.",
+    supply: "We supply our elite promise — not a cheap substitute.",
+    homework: "We do the homework first: best-fit line, look, security, legal.",
+    status: "We only deliver when we are at elite status.",
+    seal: "Wish heard. Homework done. Elite delivered.",
+  },
   rules: [
+    "Grow with the wishes of the user — never force a line that fails the fit.",
+    "Supply the elite promise only after homework: match, look, scale, legal.",
+    "Do not ship below elite status — delay or rematch rather than dilute.",
     "You always work under the Auraxir premium name — it looks like our site end to end.",
     "How production is delivered underneath is our craft — never customer-facing.",
     "Absolute premium builds only — no free-tier toys.",
@@ -25,6 +37,7 @@ export const ELITE = {
     "Platforms without real API access",
     "Fake “app” shells without logic or integrations",
     "Anything below the absolute premium bar",
+    "Shipping before match, look, and legal homework is done",
   ],
 } as const;
 

@@ -15,7 +15,7 @@ export const BRAND = {
   qualityMark: "Elite Quality Service",
   tagline: "Auraxir G2P AI. Image is everything. Safest place to build.",
   promise:
-    "Image is everything. You build on Auraxir — best fit for business or personal, G2P look, Imago presence, Shield security, dual FE/BE when you must stay online. Higher investment. Higher standard.",
+    "We grow with your wishes and supply our elite promise — only after the homework is done and we are at elite status to deliver. Image is everything. You build on Auraxir — best fit for business or personal, G2P look, Imago presence, Shield security, dual FE/BE when you must stay online. Higher investment. Higher standard.",
   /** Primary public domain */
   domain: "auraxir.com",
   supportEmail: "concierge@auraxir.com",
@@ -43,6 +43,7 @@ export const BRAND = {
   pricingStory:
     "Auraxir costs more because elite production is not a free-tier hobby. You pay for best-fit matching, G2P, Imago, dual FE/BE when needed, and Auraxir Shield — the elite encryption layer that makes this the safest place to build.",
   modelLines: [
+    "Grow with your wishes — elite promise, homework first.",
     "You build on Auraxir — one premium name end to end.",
     "Premium production lines. Our brand. Your project.",
     "Seamless guide: business or personal → best-fit production line.",
