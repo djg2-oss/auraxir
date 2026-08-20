@@ -13,9 +13,9 @@ export const BRAND = {
   superiority: "The superior standard in elite websites & apps",
   productionSeal: "Auraxir Elite Quality Service",
   qualityMark: "Elite Quality Service",
-  tagline: "ANMOS. Dual grok-4.6 on Agent Black. Image is everything.",
+  tagline: "Elite websites and apps. Image is everything.",
   promise:
-    "You build on Auraxir. ANMOS runs dual grok-4.6 — create and refine — as Agent Black on this builder. Look is G2P. GPU is RunPod + Modal. If both brains miss, Serana writes on this computer. Dual FE/BE when you must stay online.",
+    "You build on Auraxir. ANMOS is the operating system — G2P Agent Black with two hosted brains on this builder. Look is G2P. GPU is RunPod and Modal. If both hosted brains miss, Serana writes on this computer. Dual FE/BE when you must stay online.",
   /** Primary public domain */
   domain: "auraxir.com",
   supportEmail: "concierge@auraxir.com",
@@ -48,8 +48,8 @@ export const BRAND = {
     "Premium production lines. Our brand. Your project.",
     "Seamless guide: business or personal → best-fit production line.",
     "We cost more because we serve the elite.",
-    "ANMOS — dual grok-4.6 Agent Black on the builder.",
-    "Look locked locally. Dual grok copy. Serana if GPU/API is dark.",
+    "ANMOS — dual hosted brains on G2P Agent Black.",
+    "Look locked locally. Dual copy pass. Serana if GPU/API is dark.",
     "Dual FE + dual BE so you stay online at all times.",
     "Imago — image stages that elevate how the brand is seen.",
     "Brand overlay only — you operate the site; you own your content.",
@@ -58,11 +58,11 @@ export const BRAND = {
   operatorDisclosure: "Internal books only.",
   seoTitle: "Auraxir — Elite Websites & Apps · ANMOS",
   seoDescription:
-    "Auraxir website and app builder. Dual grok-4.6 on Agent Black — create and refine. Serana only if hosted brains fail.",
+    "Auraxir website and app builder. Dual hosted brains on G2P Agent Black. Engine: grok-4.6 by xAI. Not an xAI product.",
 } as const;
 
 export const MARKETING_PHRASES = [
-  "ANMOS — dual grok-4.6 Agent Black under Auraxir.",
+  "ANMOS — dual hosted brains under Auraxir.",
   "Image is everything.",
   "Auraxir Imago — protect the image. Elevate the presence.",
   "We cost more because we are for the elite.",

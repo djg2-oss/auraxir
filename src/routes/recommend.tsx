@@ -110,7 +110,7 @@ function RecommendPage() {
           </h1>
           <p className="mt-2 text-lg text-[var(--color-fg-muted)]">{headline}</p>
           <p className="mt-3 text-sm text-[var(--color-fg-muted)]">
-            ANMOS will lock look locally, then right-size copy — grok-4.6 only if this brief needs language.
+            ANMOS will lock look locally, then dual-pass copy on the hosted brains. Serana if they miss.
           </p>
           <p className="mt-3 text-sm text-[var(--color-fg-muted)]">
             {CUSTOMER_EXPERIENCE.headline}{" "}

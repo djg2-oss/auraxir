@@ -422,7 +422,7 @@ export function runG2P(opts: {
     model: {
       name: "ANMOS · Auraxir G2P",
       version: "5.0-anmos",
-      trainedFor: "Goal-to-Production look, dual grok-4.6 on Agent Black",
+      trainedFor: "Goal-to-Production look, dual hosted brains on Agent Black",
     },
   };
 }
@@ -437,16 +437,16 @@ export const G2P = {
   shortName: "ANMOS",
   fullName: "Auraxir Native Model Operating System",
   version: "5.0.0",
-  seal: "ANMOS · dual grok-4.6",
-  principle: "Look local. Dual grok copy. Serana if hosted fails.",
-  tagline: "The OS under Auraxir — dual grok-4.6 Agent Black.",
+  seal: "ANMOS · dual hosted brains",
+  principle: "Look local. Dual copy. Serana if hosted fails.",
+  tagline: "The OS under Auraxir — dual-brain Agent Black.",
   promise:
-    "ANMOS is Auraxir’s native OS. Dual grok-4.6 on Agent Black: brain D creates, brain R refines. Both hosted. G2P locks look locally. RunPod and Modal stay wired. Serana is the only local writer if both brains miss — replaced weekly.",
+    "ANMOS is Auraxir’s native OS. Dual hosted brains on G2P Agent Black: D creates, R refines. G2P locks look locally. RunPod and Modal stay wired. Serana is the only local writer if both brains miss — replaced weekly. Engine: grok-4.6 by xAI. This product is Auraxir.",
   marketLines: [
-    "Not a theme picker — a dual grok-4.6 operating system.",
-    "G2P look is local. Two grok-4.6 brains write copy.",
+    "Not a theme picker — a dual-brain operating system.",
+    "G2P look is local. Two hosted brains write copy.",
     "Serana closes the brief if GPU or API is dark.",
-    "Auraxir on the outside. Dual grok Agent Black on the builder.",
+    "Auraxir on the outside. Agent Black on the builder.",
   ],
 } as const;
 

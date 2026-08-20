@@ -267,7 +267,7 @@ function BuilderPage() {
           )}
         >
           <div className="border-b border-[var(--color-border)] px-3 py-2 text-[11px] text-[var(--color-fg-subtle)]">
-            Dual grok-4.6 · click canvas to edit
+            ANMOS · click canvas to edit
           </div>
           <div className="flex gap-1 border-b border-[var(--color-border)] p-2">
             {(
@@ -756,6 +756,7 @@ function BuilderPage() {
               <p className="text-xs text-[var(--color-fg-subtle)]">
                 Live canvas · click a block to edit
                 {prodScore ? ` · ${prodScore.percent}%` : ""}
+                {" · saved"}
               </p>
               <div className="flex items-center gap-1">
                 {(

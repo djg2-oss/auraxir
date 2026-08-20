@@ -26,19 +26,16 @@ export function G2PMarketingSection() {
       </p>
 
       <div
-        className="mt-8 overflow-hidden rounded-[var(--radius-lg)] border border-[var(--color-border)]"
-        style={{
-          background: "linear-gradient(125deg, #0b0b0f 0%, #1a1528 40%, #7c5cff44 120%)",
-        }}
+        className="mt-8 overflow-hidden rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-bg-elevated)]"
       >
         <div className="p-6 sm:p-8">
-          <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-white/55">
+          <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-[var(--color-fg-subtle)]">
             {G2P.seal}
           </p>
-          <p className="mt-2 text-2xl font-semibold text-white sm:text-3xl">{G2P.principle}</p>
+          <p className="mt-2 text-2xl font-semibold text-[var(--color-fg)] sm:text-3xl">{G2P.principle}</p>
           <ul className="mt-4 grid gap-2 sm:grid-cols-2">
             {G2P.marketLines.map((line) => (
-              <li key={line} className="text-sm text-white/80">
+              <li key={line} className="text-sm text-[var(--color-fg-muted)]">
                 · {line}
               </li>
             ))}

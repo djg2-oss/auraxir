@@ -50,6 +50,7 @@ interface BuilderState {
   duplicateSection: (id: string, sectionId: string) => void;
   undo: (id: string) => boolean;
   redo: (id: string) => boolean;
+  duplicateProject: (id: string) => SiteProject | undefined;
   deleteProject: (id: string) => void;
   setActiveProject: (id: string | null) => void;
   getProject: (id: string) => SiteProject | undefined;
@@ -385,6 +386,22 @@ export const useBuilderStore = create<BuilderState>()(
           projects: s.projects.map((p) => (p.id === id ? snap : p)),
         });
         return true;
+      },
+
+      duplicateProject: (id) => {
+        const src = get().projects.find((p) => p.id === id);
+        if (!src) return undefined;
+        const copy: SiteProject = {
+          ...JSON.parse(JSON.stringify(src)) as SiteProject,
+          id: uid("prj"),
+          name: `${src.name} copy`,
+          domain: src.domain.replace(BRAND.domain, `copy.${BRAND.domain}`),
+          published: false,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+        set((s) => ({ projects: [copy, ...s.projects], activeProjectId: copy.id }));
+        return copy;
       },
 
       deleteProject: (id) =>

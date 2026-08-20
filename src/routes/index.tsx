@@ -16,6 +16,7 @@ import {
 } from "@/components/content-responsibility";
 import { ExecutionPlanPanel } from "@/components/execution-plan";
 import { G2PMarketingSection } from "@/components/g2p-marketing";
+import { EngineCredit } from "@/components/engine-credit";
 import { G2PModelBadge } from "@/components/g2p-panel";
 import { ImagoMarketingSection } from "@/components/imago-marketing";
 import { MarketingPhraseWall, SeoFaqSection } from "@/components/marketing-seo";
@@ -69,7 +70,7 @@ function LandingPage() {
           </h1>
 
           <p className="mt-4 text-lg font-medium text-[var(--color-fg)]">
-            Dual grok-4.6 on Agent Black. Serana only if they miss.
+            Dual hosted brains on Agent Black. Serana only if they miss.
           </p>
           <p className="mt-2 max-w-2xl text-base text-[var(--color-fg-muted)]">
             {BRAND.promise}
@@ -77,6 +78,7 @@ function LandingPage() {
           <p className="mt-3 max-w-xl text-sm text-[var(--color-fg-subtle)]">
             {GUIDE.tagline} We cost more because we are for the elite.
           </p>
+          <EngineCredit className="mt-4" />
 
           <div className="mt-8 flex flex-wrap gap-3">
             <Button asChild size="lg">

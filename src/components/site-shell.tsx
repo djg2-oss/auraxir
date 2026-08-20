@@ -2,6 +2,8 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { BrandMark } from "@/components/brand-mark";
+import { CommandPalette } from "@/components/command-palette";
+import { EngineCredit } from "@/components/engine-credit";
 import { Button } from "@/components/ui/button";
 import { ensureSeranaCurrent, seranaAgeLine } from "@/lib/anmos/serana";
 import { BRAND } from "@/lib/brand";
@@ -117,6 +119,7 @@ export function SiteFooter() {
             <p className="mt-2 max-w-md text-xs text-[var(--color-fg-subtle)]">
               {CONTENT_DISCLAIMER.short}
             </p>
+            <EngineCredit className="mt-3" />
           </div>
           <div className="text-sm text-[var(--color-fg-subtle)]">
             <p>{BRAND.legalName}</p>
@@ -185,9 +188,18 @@ export function SiteFooter() {
 export function AppChrome({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-dvh flex-col">
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-[var(--radius-sm)] focus:bg-[var(--color-primary)] focus:px-3 focus:py-2 focus:text-[var(--color-primary-fg)]"
+      >
+        Skip to content
+      </a>
       <SiteHeader />
-      <main className="flex-1">{children}</main>
+      <main id="main" className="flex-1">
+        {children}
+      </main>
       <SiteFooter />
+      <CommandPalette />
     </div>
   );
 }

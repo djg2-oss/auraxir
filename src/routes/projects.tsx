@@ -1,10 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ExternalLink, Plus, Trash2, Zap } from "lucide-react";
+import { ExternalLink, Copy, Plus, Trash2, Zap } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import { useMemo, useState } from "react";
 import { AppChrome } from "@/components/site-shell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { BRAND, formatMoney } from "@/lib/brand";
 import { HOST_PLANS, SITE_TYPES } from "@/lib/catalog";
 import { projectReadiness } from "@/lib/pipeline";
@@ -17,6 +19,18 @@ export const Route = createFileRoute("/projects")({
 function ProjectsPage() {
   const projects = useBuilderStore((s) => s.projects);
   const deleteProject = useBuilderStore((s) => s.deleteProject);
+  const duplicateProject = useBuilderStore((s) => s.duplicateProject);
+  const [q, setQ] = useState("");
+  const shown = useMemo(() => {
+    const n = q.trim().toLowerCase();
+    if (!n) return projects;
+    return projects.filter(
+      (p) =>
+        p.name.toLowerCase().includes(n) ||
+        p.domain.toLowerCase().includes(n) ||
+        (p.g2pStyleName ?? "").toLowerCase().includes(n),
+    );
+  }, [projects, q]);
 
   const totalSub = projects.reduce((sum, p) => {
     const host = HOST_PLANS.find((h) => h.id === (p.builderId ?? p.hostPlanId));
@@ -35,7 +49,7 @@ function ProjectsPage() {
               Your projects
             </h1>
             <p className="mt-2 text-[var(--color-fg-muted)]">
-              Draft → Ready → Live under {BRAND.name}.
+              Draft → Ready → Live under {BRAND.name}. ⌘K to jump.
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -53,6 +67,17 @@ function ProjectsPage() {
             </Button>
           </div>
         </div>
+
+        {projects.length > 0 && (
+          <div className="mt-6">
+            <Input
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              placeholder="Search projects"
+              aria-label="Search projects"
+            />
+          </div>
+        )}
 
         {projects.length > 0 && (
           <div className="mt-6 grid gap-3 sm:grid-cols-3">
@@ -98,7 +123,7 @@ function ProjectsPage() {
           </Card>
         ) : (
           <div className="mt-8 grid gap-3">
-            {projects.map((project) => {
+            {shown.map((project) => {
               const siteType = SITE_TYPES.find((t) => t.id === project.siteTypeId);
               const host = HOST_PLANS.find(
                 (h) => h.id === (project.builderId ?? project.hostPlanId),
@@ -149,6 +174,14 @@ function ProjectsPage() {
                           <ExternalLink />
                           Preview
                         </Link>
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => duplicateProject(project.id)}
+                      >
+                        <Copy />
+                        Duplicate
                       </Button>
                       <Button
                         variant="ghost"
