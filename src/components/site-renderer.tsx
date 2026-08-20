@@ -30,6 +30,41 @@ function contrastFg(bg: string, text: string, fallbackLight = "#fafafa") {
   return isDarkSurface ? text : fallbackLight;
 }
 
+function ContactForm({
+  theme,
+  radius,
+  label,
+}: {
+  theme: ThemeTokens;
+  radius: string;
+  label: string;
+}) {
+  const [sent, setSent] = useState(false);
+  if (sent) {
+    return (
+      <p className="mt-6 text-sm font-medium" style={{ color: theme.accent }}>
+        Received. A plan comes back — not a ticket dump.
+      </p>
+    );
+  }
+  return (
+    <form
+      className="mt-6 grid max-w-md gap-3"
+      onSubmit={(e) => {
+        e.preventDefault();
+        setSent(true);
+      }}
+    >
+      <input required name="name" placeholder="Name" className="h-11 px-3 text-sm" style={{ borderRadius: radius, border: `1px solid ${theme.muted}55`, background: theme.surface, color: theme.text }} />
+      <input required type="email" name="email" placeholder="Email" className="h-11 px-3 text-sm" style={{ borderRadius: radius, border: `1px solid ${theme.muted}55`, background: theme.surface, color: theme.text }} />
+      <textarea required name="message" rows={4} placeholder="The job" className="px-3 py-2 text-sm" style={{ borderRadius: radius, border: `1px solid ${theme.muted}55`, background: theme.surface, color: theme.text }} />
+      <button type="submit" className="inline-flex h-11 items-center justify-center px-5 text-sm font-semibold" style={{ background: theme.accent, color: "#0b0b0f", borderRadius: radius }}>
+        {label || "Send"}
+      </button>
+    </form>
+  );
+}
+
 function SectionBlock({
   section,
   theme,
@@ -173,7 +208,10 @@ function SectionBlock({
             ))}
           </div>
         )}
-        {section.ctaLabel && (
+        {section.type === "contact" && (
+          <ContactForm theme={theme} radius={r} label={section.ctaLabel} />
+        )}
+        {section.type !== "contact" && section.ctaLabel && (
           <a
             href={section.ctaHref || "#contact"}
             className="mt-8 inline-flex h-11 items-center justify-center px-5 text-sm font-semibold no-underline"
@@ -255,11 +293,15 @@ export function SiteRenderer({
   className,
   showBrandChrome = true,
   production = true,
+  selectedId,
+  onSelect,
 }: {
   project: SiteProject;
   className?: string;
   showBrandChrome?: boolean;
   production?: boolean;
+  selectedId?: string | null;
+  onSelect?: (id: string) => void;
 }) {
   const { theme } = project;
   const tiePages = useMemo(() => listImagoPages(project.sections), [project.sections]);
@@ -343,12 +385,29 @@ export function SiteRenderer({
 
       <main id="main" role="main">
         {sections.map((section) => (
-          <SectionBlock
+          <div
             key={section.id}
-            section={section}
-            theme={theme}
-            production={production}
-          />
+            data-section-id={section.id}
+            onClick={
+              onSelect
+                ? (e) => {
+                    e.stopPropagation();
+                    onSelect(section.id);
+                  }
+                : undefined
+            }
+            style={
+              onSelect
+                ? {
+                    cursor: "pointer",
+                    outline: selectedId === section.id ? `2px solid ${theme.accent}` : "2px solid transparent",
+                    outlineOffset: "-2px",
+                  }
+                : undefined
+            }
+          >
+            <SectionBlock section={section} theme={theme} production={production} />
+          </div>
         ))}
       </main>
       <div id="end" className="sr-only">

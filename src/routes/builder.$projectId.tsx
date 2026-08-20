@@ -2,18 +2,27 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ChevronDown,
   ChevronUp,
+  Copy,
+  Download,
   Eye,
   EyeOff,
   ExternalLink,
   Globe,
+  Monitor,
   Palette,
   PanelLeft,
+  Plus,
+  Redo2,
   Rocket,
   Shield,
   ShieldCheck,
+  Smartphone,
+  Tablet,
+  Trash2,
+  Undo2,
   Wand2,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { BrandMark } from "@/components/brand-mark";
 import { G2PStyleSwatches, G2PTrainingNote } from "@/components/g2p-panel";
@@ -32,6 +41,9 @@ import { BRAND, QUALITY_CHECKS, formatMoney } from "@/lib/brand";
 import { getHostPlan, SITE_TYPES } from "@/lib/catalog";
 import { emptyLookFeel, runG2P } from "@/lib/g2p-ai";
 import { scoreProduction } from "@/lib/production";
+import { runAnmosCopy } from "@/lib/anmos";
+import { downloadProjectHtml } from "@/lib/export-html";
+import { SECTION_CATALOG } from "@/lib/sections";
 import { useBuilderStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
@@ -50,10 +62,19 @@ function BuilderPage() {
   const runQualityPass = useBuilderStore((s) => s.runQualityPass);
   const boostProduction = useBuilderStore((s) => s.boostProduction);
   const applyG2P = useBuilderStore((s) => s.applyG2P);
+  const applyAnmosCopy = useBuilderStore((s) => s.applyAnmosCopy);
+  const addSection = useBuilderStore((s) => s.addSection);
+  const removeSection = useBuilderStore((s) => s.removeSection);
+  const duplicateSection = useBuilderStore((s) => s.duplicateSection);
+  const undo = useBuilderStore((s) => s.undo);
+  const redo = useBuilderStore((s) => s.redo);
 
   const [panel, setPanel] = useState<"sections" | "theme" | "g2p" | "enhance" | "shield" | "site">("sections");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [device, setDevice] = useState<"phone" | "tablet" | "desktop">("desktop");
+  const [adding, setAdding] = useState(false);
+  const [anmosBusy, setAnmosBusy] = useState(false);
 
   const selected = useMemo(
     () => project?.sections.find((s) => s.id === selectedId) ?? project?.sections[0],
@@ -64,6 +85,27 @@ function BuilderPage() {
     () => (project ? scoreProduction(project) : null),
     [project],
   );
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const meta = e.metaKey || e.ctrlKey;
+      if (meta && e.key.toLowerCase() === "z") {
+        e.preventDefault();
+        if (e.shiftKey) redo(projectId);
+        else undo(projectId);
+      }
+      if (meta && e.key.toLowerCase() === "e") {
+        e.preventDefault();
+        const p = useBuilderStore.getState().projects.find((x) => x.id === projectId);
+        if (p) downloadProjectHtml(p);
+      }
+      if (e.key === "1" && !meta) setDevice("phone");
+      if (e.key === "2" && !meta) setDevice("tablet");
+      if (e.key === "3" && !meta) setDevice("desktop");
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [projectId, undo, redo]);
 
   if (!project) {
     return (
@@ -81,6 +123,32 @@ function BuilderPage() {
   const activeSection = selected ?? project.sections[0];
   const setupFee = project.setupFee ?? BRAND.setupFee;
   const priceMonthly = project.priceMonthly ?? host.priceMonthly;
+  const frame = device === "phone" ? 390 : device === "tablet" ? 768 : 1100;
+  const live = project;
+
+  async function rewriteCopy() {
+    setAnmosBusy(true);
+    try {
+      const anmos = await runAnmosCopy({
+        data: {
+          name: live.name,
+          type: live.needs.businessType ?? "",
+          description: live.needs.description,
+          desire: live.needs.lookFeel?.desire ?? "",
+          heroSubtitle: activeSection?.subtitle ?? "",
+          ctaDefault: activeSection?.ctaLabel ?? "Get started",
+        },
+      });
+      if (anmos.ok) {
+        applyAnmosCopy(live.id, anmos.copy);
+        toast.success(`ANMOS ${anmos.packet.schedule}`, { description: anmos.packet.why });
+      }
+    } catch {
+      toast.error("ANMOS copy did not land — kernel sections kept");
+    } finally {
+      setAnmosBusy(false);
+    }
+  }
 
   return (
     <div className="flex h-dvh flex-col overflow-hidden bg-[var(--color-bg)]">
@@ -126,20 +194,46 @@ function BuilderPage() {
         </div>
         <div className="flex items-center gap-2">
           <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Undo"
+            onClick={() => {
+              if (!undo(project.id)) toast("Nothing to undo");
+            }}
+          >
+            <Undo2 className="size-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Redo"
+            onClick={() => {
+              if (!redo(project.id)) toast("Nothing to redo");
+            }}
+          >
+            <Redo2 className="size-4" />
+          </Button>
+          <Button
             variant="secondary"
             size="sm"
             className="hidden sm:inline-flex"
-            onClick={() => {
-              applyG2P(project.id);
-              boostProduction(project.id);
-              runQualityPass(project.id);
-              toast.success("G2P look + production boosted", {
-                description: "Desired aesthetic re-applied · quality raised · nothing removed",
-              });
-            }}
+            disabled={anmosBusy}
+            onClick={() => void rewriteCopy()}
           >
             <Wand2 />
-            G2P + QA
+            {anmosBusy ? "ANMOS…" : "ANMOS copy"}
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="hidden md:inline-flex"
+            onClick={() => {
+              downloadProjectHtml(project);
+              toast.success("Production HTML downloaded");
+            }}
+          >
+            <Download />
+            Export
           </Button>
           <Button asChild variant="outline" size="sm">
             <Link to="/preview/$projectId" params={{ projectId: project.id }}>
@@ -153,8 +247,9 @@ function BuilderPage() {
               applyG2P(project.id);
               boostProduction(project.id);
               publishProject(project.id);
-              toast.success("Live — Elite Quality Service production", {
-                description: `${project.domain} · G2P look locked · ${formatMoney(priceMonthly)}/mo`,
+              downloadProjectHtml(project);
+              toast.success("Live in preview · production HTML downloaded", {
+                description: `${project.domain} · open Preview or the HTML file`,
               });
             }}
           >
@@ -172,7 +267,7 @@ function BuilderPage() {
           )}
         >
           <div className="border-b border-[var(--color-border)] px-3 py-2 text-[11px] text-[var(--color-fg-subtle)]">
-            Auraxir G2P AI · Imago · Shield · Elite production
+            Auraxir · ANMOS dual-brain · click canvas to edit
           </div>
           <div className="flex gap-1 border-b border-[var(--color-border)] p-2">
             {(
@@ -204,6 +299,34 @@ function BuilderPage() {
           <div className="min-h-0 flex-1 overflow-y-auto p-3">
             {panel === "sections" && (
               <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <p className="text-xs font-medium uppercase tracking-[0.12em] text-[var(--color-fg-subtle)]">
+                    Canvas
+                  </p>
+                  <Button size="sm" variant="secondary" onClick={() => setAdding((v) => !v)}>
+                    <Plus className="size-3.5" />
+                    Add
+                  </Button>
+                </div>
+                {adding && (
+                  <div className="grid grid-cols-2 gap-1.5">
+                    {SECTION_CATALOG.map((s) => (
+                      <button
+                        key={s.type}
+                        type="button"
+                        className="rounded-[var(--radius-sm)] border border-[var(--color-border)] px-2 py-1.5 text-left text-xs hover:bg-[var(--color-bg-subtle)]"
+                        onClick={() => {
+                          addSection(project.id, s.type);
+                          setAdding(false);
+                          toast.success(`Added ${s.label}`);
+                        }}
+                      >
+                        <span className="font-medium text-[var(--color-fg)]">{s.label}</span>
+                        <span className="mt-0.5 block text-[10px] text-[var(--color-fg-subtle)]">{s.blurb}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
                 <div className="space-y-1">
                   {project.sections.map((section, index) => (
                     <div
@@ -259,6 +382,28 @@ function BuilderPage() {
                         ) : (
                           <EyeOff className="size-3.5" />
                         )}
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="size-8"
+                        aria-label="Duplicate"
+                        onClick={() => duplicateSection(project.id, section.id)}
+                      >
+                        <Copy className="size-3.5" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="size-8"
+                        aria-label="Remove"
+                        disabled={project.sections.length <= 1}
+                        onClick={() => {
+                          removeSection(project.id, section.id);
+                          if (selectedId === section.id) setSelectedId(null);
+                        }}
+                      >
+                        <Trash2 className="size-3.5" />
                       </Button>
                     </div>
                   ))}
@@ -344,9 +489,39 @@ function BuilderPage() {
                                   updateSection(project.id, activeSection.id, { items });
                                 }}
                               />
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => {
+                                  const items = activeSection.items.filter((_, idx) => idx !== i);
+                                  updateSection(project.id, activeSection.id, { items });
+                                }}
+                              >
+                                Remove item
+                              </Button>
                             </div>
                           ))}
                         </div>
+                      )}
+                      {(activeSection.type === "features" ||
+                        activeSection.type === "services" ||
+                        activeSection.type === "gallery" ||
+                        activeSection.type === "testimonials" ||
+                        activeSection.type === "pricing") && (
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          onClick={() =>
+                            updateSection(project.id, activeSection.id, {
+                              items: [
+                                ...activeSection.items,
+                                { title: "New item", body: "Say what this does." },
+                              ],
+                            })
+                          }
+                        >
+                          Add item
+                        </Button>
                       )}
                     </div>
                   </>
@@ -373,7 +548,7 @@ function BuilderPage() {
                     <input
                       type="color"
                       aria-label={label}
-                      value={project.theme[key]}
+                      value={/^#[0-9A-Fa-f]{6}$/.test(project.theme[key]) ? project.theme[key] : "#111111"}
                       onChange={(e) => setTheme(project.id, { [key]: e.target.value })}
                       className="h-10 w-12 cursor-pointer rounded-[var(--radius-sm)] border border-[var(--color-border)] bg-transparent p-1"
                     />
@@ -577,29 +752,59 @@ function BuilderPage() {
           )}
         >
           <div className="mx-auto max-w-4xl">
-            <div className="mb-3 flex items-center justify-between gap-2">
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
               <p className="text-xs text-[var(--color-fg-subtle)]">
-                Production preview · {host.name}
-                {project.g2pStyleName ? ` · G2P ${project.g2pStyleName}` : ""}
+                Live canvas · click a block to edit
                 {prodScore ? ` · ${prodScore.percent}%` : ""}
               </p>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="lg:hidden"
-                onClick={() => setSidebarOpen(true)}
-              >
-                Edit
-              </Button>
+              <div className="flex items-center gap-1">
+                {(
+                  [
+                    ["phone", Smartphone],
+                    ["tablet", Tablet],
+                    ["desktop", Monitor],
+                  ] as const
+                ).map(([id, Icon]) => (
+                  <Button
+                    key={id}
+                    variant={device === id ? "default" : "ghost"}
+                    size="icon"
+                    aria-label={id}
+                    onClick={() => setDevice(id)}
+                  >
+                    <Icon className="size-4" />
+                  </Button>
+                ))}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="lg:hidden"
+                  onClick={() => setSidebarOpen(true)}
+                >
+                  Edit
+                </Button>
+              </div>
             </div>
+            <div className="mx-auto" style={{ maxWidth: frame }}>
             <div className="overflow-hidden rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-white shadow-[var(--shadow-soft)]">
               <div className="flex items-center gap-2 border-b border-zinc-200 bg-zinc-100 px-3 py-2">
                 <span className="size-2.5 rounded-full bg-zinc-300" />
                 <span className="size-2.5 rounded-full bg-zinc-300" />
                 <span className="size-2.5 rounded-full bg-zinc-300" />
                 <span className="ml-2 truncate text-xs text-zinc-500">{project.domain}</span>
+                <span className="ml-auto text-[10px] uppercase tracking-wider text-zinc-400">{device}</span>
               </div>
-              <SiteRenderer project={project} production />
+              <SiteRenderer
+                project={project}
+                production
+                selectedId={activeSection?.id}
+                onSelect={(id) => {
+                  setSelectedId(id);
+                  setPanel("sections");
+                  setSidebarOpen(true);
+                }}
+              />
+            </div>
             </div>
           </div>
         </div>

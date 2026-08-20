@@ -17,6 +17,7 @@ import type { BuilderId } from "./builders";
 import { emptyLookFeel, runG2P, applyG2PTheme, type StyleSystem } from "./g2p-ai";
 import { hydrateNeeds, runElitePipeline } from "./pipeline";
 import type { AnmosCopy } from "./anmos";
+import { blankSection } from "./sections";
 import { getTieIn, projectTieInIds } from "./tie-in";
 import { isAdultProject } from "./content-responsibility";
 import { resolveAlwaysOnTier, alwaysOnMonthlyAddOn } from "./always-on";
@@ -27,6 +28,8 @@ interface BuilderState {
   needs: NeedsAnswers;
   projects: SiteProject[];
   activeProjectId: string | null;
+  past: SiteProject[];
+  future: SiteProject[];
   setNeeds: (partial: Partial<NeedsAnswers>) => void;
   setLookFeel: (partial: Partial<NeedsAnswers["lookFeel"]>) => void;
   resetNeeds: () => void;
@@ -42,6 +45,11 @@ interface BuilderState {
   setTheme: (projectId: string, theme: Partial<ThemeTokens>) => void;
   applyG2P: (id: string, system?: StyleSystem) => void;
   applyAnmosCopy: (id: string, copy: AnmosCopy) => void;
+  addSection: (id: string, type: SiteSection["type"]) => void;
+  removeSection: (id: string, sectionId: string) => void;
+  duplicateSection: (id: string, sectionId: string) => void;
+  undo: (id: string) => boolean;
+  redo: (id: string) => boolean;
   deleteProject: (id: string) => void;
   setActiveProject: (id: string | null) => void;
   getProject: (id: string) => SiteProject | undefined;
@@ -89,12 +97,24 @@ function normalizeProject(proj: SiteProject): SiteProject {
   };
 }
 
+function cloneProject(p: SiteProject): SiteProject {
+  return JSON.parse(JSON.stringify(p)) as SiteProject;
+}
+
 export const useBuilderStore = create<BuilderState>()(
   persist(
-    (set, get) => ({
+    (set, get) => {
+      const remember = (id: string) => {
+        const p = get().projects.find((x) => x.id === id);
+        if (!p) return;
+        set((s) => ({ past: [...s.past, cloneProject(p)].slice(-40), future: [] }));
+      };
+      return {
       needs: emptyNeeds(),
       projects: [],
       activeProjectId: null,
+      past: [] as SiteProject[],
+      future: [] as SiteProject[],
 
       setNeeds: (partial) => set((s) => ({ needs: { ...s.needs, ...partial } })),
 
@@ -177,7 +197,8 @@ export const useBuilderStore = create<BuilderState>()(
           ),
         })),
 
-      updateSection: (projectId, sectionId, partial) =>
+      updateSection: (projectId, sectionId, partial) => {
+        remember(projectId);
         set((s) => ({
           projects: s.projects.map((p) => {
             if (p.id !== projectId) return p;
@@ -189,9 +210,11 @@ export const useBuilderStore = create<BuilderState>()(
               ),
             };
           }),
-        })),
+        }));
+      },
 
-      reorderSections: (projectId, from, to) =>
+      reorderSections: (projectId, from, to) => {
+        remember(projectId);
         set((s) => ({
           projects: s.projects.map((p) => {
             if (p.id !== projectId) return p;
@@ -201,18 +224,22 @@ export const useBuilderStore = create<BuilderState>()(
             sections.splice(to, 0, item);
             return { ...p, sections, updatedAt: new Date().toISOString() };
           }),
-        })),
+        }));
+      },
 
-      setTheme: (projectId, theme) =>
+      setTheme: (projectId, theme) => {
+        remember(projectId);
         set((s) => ({
           projects: s.projects.map((p) =>
             p.id === projectId
               ? { ...p, theme: { ...p.theme, ...theme }, updatedAt: new Date().toISOString() }
               : p,
           ),
-        })),
+        }));
+      },
 
-      applyG2P: (id, system) =>
+      applyG2P: (id, system) => {
+        remember(id);
         set((s) => ({
           projects: s.projects.map((p) => {
             if (p.id !== id) return p;
@@ -244,9 +271,11 @@ export const useBuilderStore = create<BuilderState>()(
               updatedAt: new Date().toISOString(),
             };
           }),
-        })),
+        }));
+      },
 
-      applyAnmosCopy: (id, copy) =>
+      applyAnmosCopy: (id, copy) => {
+        remember(id);
         set((s) => ({
           projects: s.projects.map((p) => {
             if (p.id !== id) return p;
@@ -270,7 +299,93 @@ export const useBuilderStore = create<BuilderState>()(
             });
             return { ...p, sections, updatedAt: new Date().toISOString() };
           }),
-        })),
+        }));
+      },
+
+      addSection: (id, type) => {
+        remember(id);
+        set((s) => ({
+          projects: s.projects.map((p) => {
+            if (p.id !== id) return p;
+            const next = blankSection(type, p.name);
+            const sections = [...p.sections];
+            const footerIdx = sections.findIndex((sec) => sec.type === "footer");
+            if (footerIdx >= 0) sections.splice(footerIdx, 0, next);
+            else sections.push(next);
+            return { ...p, sections, updatedAt: new Date().toISOString() };
+          }),
+        }));
+      },
+
+      removeSection: (id, sectionId) => {
+        remember(id);
+        set((s) => ({
+          projects: s.projects.map((p) => {
+            if (p.id !== id) return p;
+            if (p.sections.length <= 1) return p;
+            return {
+              ...p,
+              sections: p.sections.filter((sec) => sec.id !== sectionId),
+              updatedAt: new Date().toISOString(),
+            };
+          }),
+        }));
+      },
+
+      duplicateSection: (id, sectionId) => {
+        remember(id);
+        set((s) => ({
+          projects: s.projects.map((p) => {
+            if (p.id !== id) return p;
+            const idx = p.sections.findIndex((sec) => sec.id === sectionId);
+            if (idx < 0) return p;
+            const copy = { ...p.sections[idx]!, id: uid("sec"), title: `${p.sections[idx]!.title}` };
+            const sections = [...p.sections];
+            sections.splice(idx + 1, 0, copy);
+            return { ...p, sections, updatedAt: new Date().toISOString() };
+          }),
+        }));
+      },
+
+      undo: (id) => {
+        const s = get();
+        let last = -1;
+        for (let i = s.past.length - 1; i >= 0; i--) {
+          if (s.past[i]?.id === id) {
+            last = i;
+            break;
+          }
+        }
+        if (last < 0) return false;
+        const snap = s.past[last]!;
+        const current = s.projects.find((p) => p.id === id);
+        set({
+          past: s.past.filter((_, i) => i !== last),
+          future: current ? [...s.future, cloneProject(current)] : s.future,
+          projects: s.projects.map((p) => (p.id === id ? snap : p)),
+        });
+        return true;
+      },
+
+      redo: (id) => {
+        const s = get();
+        let last = -1;
+        for (let i = s.future.length - 1; i >= 0; i--) {
+          if (s.future[i]?.id === id) {
+            last = i;
+            break;
+          }
+        }
+        if (last < 0) return false;
+        const snap = s.future[last]!;
+        const current = s.projects.find((p) => p.id === id);
+        set({
+          future: s.future.filter((_, i) => i !== last),
+          past: current ? [...s.past, cloneProject(current)] : s.past,
+          projects: s.projects.map((p) => (p.id === id ? snap : p)),
+        });
+        return true;
+      },
 
       deleteProject: (id) =>
         set((s) => ({
@@ -357,7 +472,8 @@ export const useBuilderStore = create<BuilderState>()(
             };
           }),
         })),
-    }),
+    };
+    },
     {
       name: "auraxir-builder-v6-pipeline",
       partialize: (s) => ({
@@ -380,6 +496,8 @@ export const useBuilderStore = create<BuilderState>()(
           ...p,
           projects,
           needs,
+          past: [],
+          future: [],
         };
       },
     },
