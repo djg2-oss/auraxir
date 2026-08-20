@@ -144,7 +144,7 @@ function BuilderPage() {
         toast.success(`ANMOS ${anmos.packet.schedule}`, { description: anmos.packet.why });
       }
     } catch {
-      toast.error("ANMOS copy did not land — kernel sections kept");
+      toast.error("ANMOS copy did not land — Serana kept the sections");
     } finally {
       setAnmosBusy(false);
     }
@@ -267,7 +267,7 @@ function BuilderPage() {
           )}
         >
           <div className="border-b border-[var(--color-border)] px-3 py-2 text-[11px] text-[var(--color-fg-subtle)]">
-            Auraxir · ANMOS dual-brain · click canvas to edit
+            Dual grok-4.6 · click canvas to edit
           </div>
           <div className="flex gap-1 border-b border-[var(--color-border)] p-2">
             {(

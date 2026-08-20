@@ -8,34 +8,37 @@ export function planAnmosBuild(opts: {
   desire: string;
   apiLive: boolean;
 }): AnmosPacket {
-  const language = (opts.description + " " + opts.desire).trim().length >= 40;
+  const brief = (opts.description + " " + opts.desire).trim();
+  const rich = brief.length >= 80;
   const id = `ax-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
-
-  if (!language) {
-    return {
-      id,
-      os: "AURAXIR",
-      anmos: true,
-      schedule: "series",
-      why: "Look is local G2P. No copy brief — skip grok-4.6 (right-size).",
-      budgetMs: 0,
-      brains: { d: "kernel", r: "skip" },
-      primary: "kernel",
-      backup: "kernel",
-    };
-  }
 
   if (!opts.apiLive) {
     return {
       id,
       os: "AURAXIR",
       anmos: true,
+      dual: true,
       schedule: "series",
-      why: "Language needed, vendor dark — kernel writer closes copy. G2P look still applied.",
+      why: "Both grok-4.6 brains dark — Serana writes locally. Agent Black is not on this machine.",
       budgetMs: 0,
-      brains: { d: "kernel", r: "skip" },
-      primary: "kernel",
-      backup: "kernel",
+      brains: { d: "serana", r: "skip" },
+      primary: "serana",
+      backup: "serana",
+    };
+  }
+
+  if (rich) {
+    return {
+      id,
+      os: "AURAXIR",
+      anmos: true,
+      dual: true,
+      schedule: "parallel",
+      why: `${ANMOS.brain} dual grok-4.6: D and R fire together. First quality-pass within ${PARALLEL_MS}ms wins. Serana if both miss.`,
+      budgetMs: PARALLEL_MS,
+      brains: { d: "grok-4.6", r: "grok-4.6" },
+      primary: "grok-4.6",
+      backup: "serana",
     };
   }
 
@@ -43,12 +46,13 @@ export function planAnmosBuild(opts: {
     id,
     os: "AURAXIR",
     anmos: true,
-    schedule: "parallel",
-    why: `${ANMOS.brain} D is kernel copy in hand; grok-4.6 R in flight. First quality-pass within ${PARALLEL_MS}ms wins.`,
-    budgetMs: PARALLEL_MS,
-    brains: { d: "kernel", r: "grok-4.6" },
+    dual: true,
+    schedule: "backup",
+    why: "Dual grok-4.6: D writes, R only if D misses. Serana if both miss. Extra pass stays under the latency bar.",
+    budgetMs: BACKUP_MS,
+    brains: { d: "grok-4.6", r: "grok-4.6" },
     primary: "grok-4.6",
-    backup: "kernel",
+    backup: "serana",
   };
 }
 

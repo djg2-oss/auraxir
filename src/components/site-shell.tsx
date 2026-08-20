@@ -1,8 +1,9 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BrandMark } from "@/components/brand-mark";
 import { Button } from "@/components/ui/button";
+import { ensureSeranaCurrent, seranaAgeLine } from "@/lib/anmos/serana";
 import { BRAND } from "@/lib/brand";
 import { CONTENT_DISCLAIMER } from "@/lib/content-responsibility";
 import { cn } from "@/lib/utils";
@@ -17,6 +18,10 @@ const nav = [
 export function SiteHeader() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState(false);
+  const [serana, setSerana] = useState("Serana local · weekly");
+  useEffect(() => {
+    setSerana(seranaAgeLine(ensureSeranaCurrent()));
+  }, []);
 
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--color-border)] bg-[color-mix(in_oklab,var(--color-bg)_88%,transparent)] backdrop-blur-md">
@@ -26,7 +31,7 @@ export function SiteHeader() {
             <span className="font-medium text-[var(--color-fg)]">{BRAND.legalName}</span>
             <span className="hidden sm:inline"> — {BRAND.tagline}</span>
           </p>
-          <p className="shrink-0 text-[var(--color-fg-subtle)]">{BRAND.qualityMark}</p>
+          <p className="shrink-0 text-[var(--color-fg-subtle)]">{serana}</p>
         </div>
       </div>
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">

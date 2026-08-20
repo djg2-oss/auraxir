@@ -41,8 +41,8 @@ export const EXECUTION_PLAN: ExecPhase[] = [
       },
       {
         id: "g2p",
-        title: "ANMOS dual-brain OS",
-        detail: "G2P look local · grok-4.6 copy right-sized · kernel backup",
+        title: "Dual grok-4.6 on Agent Black",
+        detail: "D create · R refine · Serana if hosted fails",
         status: "done",
       },
       {

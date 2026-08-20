@@ -48,7 +48,7 @@ function LandingPage() {
           className="pointer-events-none absolute inset-0 opacity-40"
           style={{
             background:
-              "radial-gradient(ellipse 80% 60% at 20% -10%, #c9a22733, transparent), radial-gradient(ellipse 60% 50% at 90% 20%, #7c5cff22, transparent)",
+              "radial-gradient(ellipse 80% 60% at 18% -8%, #c9a22728, transparent 55%)",
           }}
         />
         <div className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
@@ -69,7 +69,7 @@ function LandingPage() {
           </h1>
 
           <p className="mt-4 text-lg font-medium text-[var(--color-fg)]">
-            Auraxir. ANMOS under it. Dual-brain G2P Agent Black.
+            Dual grok-4.6 on Agent Black. Serana only if they miss.
           </p>
           <p className="mt-2 max-w-2xl text-base text-[var(--color-fg-muted)]">
             {BRAND.promise}

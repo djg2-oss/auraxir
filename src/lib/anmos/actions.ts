@@ -3,22 +3,32 @@ import { ANMOS, type AnmosPacket } from "./kernel";
 import { planAnmosBuild } from "./plan";
 import { mergeCopy, writeKernelCopy, type AnmosCopy } from "./writer";
 import { anmosApiLive, grokCopyJson, parseCopyJson } from "./xai";
+import { gpuStatus } from "./gpu";
 
 export type AnmosBuildResult = {
   ok: true;
   packet: AnmosPacket;
   copy: AnmosCopy;
-  source: "kernel" | "grok-4.6" | "kernel-fallback";
+  source: "serana" | "grok-4.6" | "serana-fallback";
   model: string;
 };
+
+function copyScore(c: AnmosCopy) {
+  const n = (s: string) => s.trim().length;
+  return n(c.hero.title) + n(c.hero.body) + n(c.about.body) + n(c.cta.title) + c.features.items.length * 24;
+}
 
 export const getAnmosStatus = createServerFn({ method: "GET" }).handler(async () => ({
   os: ANMOS.os,
   anmos: ANMOS.fullName,
   version: ANMOS.version,
   brain: ANMOS.brain,
+  dual: ANMOS.dual,
+  brains: ANMOS.brains,
   engine: ANMOS.engine,
   apiLive: anmosApiLive(),
+  gpu: gpuStatus(),
+  local: ANMOS.local,
 }));
 
 export const runAnmosCopy = createServerFn({ method: "POST" })
@@ -46,10 +56,10 @@ export const runAnmosCopy = createServerFn({ method: "POST" })
       desire: data.desire,
       apiLive,
     });
-    const kernel = writeKernelCopy(data);
+    const serana = writeKernelCopy(data);
 
-    if (packet.brains.r !== "grok-4.6" || packet.budgetMs <= 0) {
-      return { ok: true, packet, copy: kernel, source: "kernel", model: ANMOS.writer };
+    if (!apiLive || packet.brains.d !== "grok-4.6") {
+      return { ok: true, packet, copy: serana, source: "serana", model: ANMOS.writer };
     }
 
     const brief = [
@@ -62,22 +72,41 @@ export const runAnmosCopy = createServerFn({ method: "POST" })
       "Write elite production copy. No guaranteed ROI. No fake testimonials.",
     ].join("\n");
 
-    const raw = await grokCopyJson(brief, packet.budgetMs);
-    const parsed = raw ? parseCopyJson(raw) : null;
-    if (parsed) {
-      return {
-        ok: true,
-        packet,
-        copy: mergeCopy(kernel, parsed),
-        source: "grok-4.6",
-        model: ANMOS.engine,
-      };
+    const budget = Math.max(800, packet.budgetMs);
+
+    if (packet.schedule === "parallel") {
+      const [dRaw, rRaw] = await Promise.all([
+        grokCopyJson(brief, budget, "D"),
+        grokCopyJson(`${brief}\nIndependent second pass. Do not copy the first draft — you cannot see it.`, budget, "R"),
+      ]);
+      const d = dRaw ? parseCopyJson(dRaw) : null;
+      const r = rRaw ? parseCopyJson(rRaw) : null;
+      const pick = !d ? r : !r ? d : copyScore(r) > copyScore(d) ? r : d;
+      if (pick) {
+        return { ok: true, packet, copy: mergeCopy(serana, pick), source: "grok-4.6", model: ANMOS.engine };
+      }
+      return { ok: true, packet, copy: serana, source: "serana-fallback", model: ANMOS.writer };
     }
-    return {
-      ok: true,
-      packet,
-      copy: kernel,
-      source: "kernel-fallback",
-      model: ANMOS.writer,
-    };
+
+    const dRaw = await grokCopyJson(brief, budget, "D");
+    const d = dRaw ? parseCopyJson(dRaw) : null;
+    if (d && copyScore(d) >= 80) {
+      return { ok: true, packet, copy: mergeCopy(serana, d), source: "grok-4.6", model: ANMOS.engine };
+    }
+
+    if (packet.brains.r === "grok-4.6") {
+      const rRaw = await grokCopyJson(
+        d
+          ? `${brief}\nRefine this draft, keep facts, cut hype:\n${JSON.stringify(d)}`
+          : brief,
+        budget,
+        "R",
+      );
+      const r = rRaw ? parseCopyJson(rRaw) : null;
+      if (r) {
+        return { ok: true, packet, copy: mergeCopy(serana, r), source: "grok-4.6", model: ANMOS.engine };
+      }
+    }
+
+    return { ok: true, packet, copy: serana, source: "serana-fallback", model: ANMOS.writer };
   });
