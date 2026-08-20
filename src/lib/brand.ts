@@ -13,9 +13,9 @@ export const BRAND = {
   superiority: "The superior standard in elite websites & apps",
   productionSeal: "Auraxir Elite Quality Service",
   qualityMark: "Elite Quality Service",
-  tagline: "Auraxir G2P AI. Image is everything. Safest place to build.",
+  tagline: "ANMOS. Dual-brain G2P Agent Black. Image is everything.",
   promise:
-    "We grow with your wishes and supply our elite promise — only after the homework is done and we are at elite status to deliver. Image is everything. You build on Auraxir — best fit for business or personal, G2P look, Imago presence, Shield security, dual FE/BE when you must stay online. Higher investment. Higher standard.",
+    "You build on Auraxir. The OS is ANMOS — dual-brain G2P Agent Black. Look is local G2P. Copy is grok-4.6 only when the brief needs language. Kernel writer is the floor. Dual FE/BE when you must stay online. Higher investment. Higher standard.",
   /** Primary public domain */
   domain: "auraxir.com",
   supportEmail: "concierge@auraxir.com",
@@ -48,20 +48,21 @@ export const BRAND = {
     "Premium production lines. Our brand. Your project.",
     "Seamless guide: business or personal → best-fit production line.",
     "We cost more because we serve the elite.",
-    "Auraxir G2P AI locks the look to your taste.",
+    "ANMOS — Auraxir Native Model Operating System. Dual-brain BLACK.",
+    "Look locked locally. Copy right-sized. Kernel if the vendor is dark.",
     "Dual FE + dual BE so you stay online at all times.",
     "Imago — image stages that elevate how the brand is seen.",
     "Brand overlay only — you operate the site; you own your content.",
     "Auraxir Shield — elite encryption stacked above every production baseline.",
   ],
   operatorDisclosure: "Internal books only.",
-  seoTitle: "Auraxir — Elite Websites & Premium Apps",
+  seoTitle: "Auraxir — Elite Websites & Apps · ANMOS",
   seoDescription:
-    "Auraxir — image is everything. Elite websites and apps, Imago stages for brand presence, G2P look systems, dual FE/BE always-on when required.",
+    "Auraxir website and app builder. ANMOS dual-brain G2P Agent Black plans series, parallel, or backup — look local, copy right-sized.",
 } as const;
 
 export const MARKETING_PHRASES = [
-  "Auraxir G2P AI — desire in, production look out.",
+  "ANMOS — dual-brain G2P Agent Black under Auraxir.",
   "Image is everything.",
   "Auraxir Imago — protect the image. Elevate the presence.",
   "We cost more because we are for the elite.",

@@ -69,7 +69,7 @@ function LandingPage() {
           </h1>
 
           <p className="mt-4 text-lg font-medium text-[var(--color-fg)]">
-            Auraxir G2P AI. Image is everything.
+            Auraxir. ANMOS under it. Dual-brain G2P Agent Black.
           </p>
           <p className="mt-2 max-w-2xl text-base text-[var(--color-fg-muted)]">
             {BRAND.promise}

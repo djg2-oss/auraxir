@@ -420,9 +420,9 @@ export function runG2P(opts: {
       note: `Alt look · score ${r.score}`,
     })),
     model: {
-      name: "Auraxir G2P AI",
-      version: "1.1-elite",
-      trainedFor: "Goal-to-Production look & feel for elite websites & apps",
+      name: "ANMOS · Auraxir G2P",
+      version: "4.9-anmos",
+      trainedFor: "Goal-to-Production look, dual-brain BLACK OS",
     },
   };
 }
@@ -433,20 +433,20 @@ export function applyG2PTheme(system: StyleSystem): ThemeTokens {
 }
 
 export const G2P = {
-  name: "Auraxir G2P AI",
-  shortName: "G2P",
-  fullName: "Auraxir Goal-to-Production AI",
-  version: "1.1-elite",
-  seal: "Auraxir G2P AI · Look Engine",
-  principle: "Desire in. Production look out.",
-  tagline: "The look you want — locked into production.",
+  name: "ANMOS",
+  shortName: "ANMOS",
+  fullName: "Auraxir Native Model Operating System",
+  version: "4.9.0",
+  seal: "ANMOS · dual-brain G2P Agent Black",
+  principle: "Look local. Copy right-sized. Kernel floor.",
+  tagline: "The OS under Auraxir — dual-brain BLACK.",
   promise:
-    "Auraxir G2P AI is our proprietary Goal-to-Production engine. Tell it the mood, energy, and desire. It matches a trained elite style system and applies colors, type, radius, and voice — so the site feels exactly right before you ship.",
+    "ANMOS is Auraxir’s native OS. Dual-brain G2P Agent Black: brain D locks look on the local G2P corpus (zero vendor latency). Brain R writes copy on grok-4.6 only when the brief needs language. Kernel writer is the backup. Series, parallel, or backup — decided on the input.",
   marketLines: [
-    "Not a theme picker — a trained look engine.",
-    "Mood, energy, contrast, and free-text desire.",
-    "Production tokens + copy tone in one pass.",
-    "Exclusive to Auraxir. Your look, our name.",
+    "Not a theme picker — a dual-brain operating system.",
+    "G2P look is local. grok-4.6 is called only when copy needs it.",
+    "Kernel writer closes the brief if the vendor is dark or slow.",
+    "Auraxir on the outside. ANMOS / BLACK on the inside.",
   ],
 } as const;
 

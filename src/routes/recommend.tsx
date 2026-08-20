@@ -15,6 +15,7 @@ import { BRAND, QUALITY_CHECKS } from "@/lib/brand";
 import { CUSTOMER_EXPERIENCE } from "@/lib/infra";
 import { pathFromBusinessType } from "@/lib/guide";
 import { pipelineReady, runElitePipeline, type PipelineMode } from "@/lib/pipeline";
+import { runAnmosCopy } from "@/lib/anmos";
 import { useBuilderStore } from "@/lib/store";
 
 export const Route = createFileRoute("/recommend")({
@@ -29,6 +30,7 @@ function RecommendPage() {
   const { mode = "full" } = useSearch({ from: "/recommend" });
   const needs = useBuilderStore((s) => s.needs);
   const createProjectFromNeeds = useBuilderStore((s) => s.createProjectFromNeeds);
+  const applyAnmosCopy = useBuilderStore((s) => s.applyAnmosCopy);
 
   const ready = pipelineReady(needs, mode);
   const plan = useMemo(
@@ -36,8 +38,23 @@ function RecommendPage() {
     [needs, mode, ready],
   );
 
-  function build() {
+  async function build() {
     const project = createProjectFromNeeds();
+    try {
+      const anmos = await runAnmosCopy({
+        data: {
+          name: needs.businessName,
+          type: needs.businessType ?? "",
+          description: needs.description,
+          desire: needs.lookFeel?.desire ?? "",
+          heroSubtitle: plan?.g2p.system.tone.heroSubtitle ?? "",
+          ctaDefault: plan?.g2p.system.tone.ctaDefault ?? "",
+        },
+      });
+      if (anmos.ok) applyAnmosCopy(project.id, anmos.copy);
+    } catch {
+      /* kernel sections already on the project */
+    }
     void navigate({ to: "/builder/$projectId", params: { projectId: project.id } });
   }
 
@@ -92,6 +109,9 @@ function RecommendPage() {
             {needs.businessName || "Your project"}
           </h1>
           <p className="mt-2 text-lg text-[var(--color-fg-muted)]">{headline}</p>
+          <p className="mt-3 text-sm text-[var(--color-fg-muted)]">
+            ANMOS will lock look locally, then right-size copy — grok-4.6 only if this brief needs language.
+          </p>
           <p className="mt-3 text-sm text-[var(--color-fg-muted)]">
             {CUSTOMER_EXPERIENCE.headline}{" "}
             {CUSTOMER_EXPERIENCE.promise}

@@ -41,8 +41,8 @@ export const EXECUTION_PLAN: ExecPhase[] = [
       },
       {
         id: "g2p",
-        title: "Auraxir G2P AI v1.1-elite",
-        detail: "Trained style systems · mood/desire → production tokens",
+        title: "ANMOS dual-brain OS",
+        detail: "G2P look local · grok-4.6 copy right-sized · kernel backup",
         status: "done",
       },
       {

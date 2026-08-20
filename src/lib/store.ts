@@ -16,6 +16,7 @@ import {
 import type { BuilderId } from "./builders";
 import { emptyLookFeel, runG2P, applyG2PTheme, type StyleSystem } from "./g2p-ai";
 import { hydrateNeeds, runElitePipeline } from "./pipeline";
+import type { AnmosCopy } from "./anmos";
 import { getTieIn, projectTieInIds } from "./tie-in";
 import { isAdultProject } from "./content-responsibility";
 import { resolveAlwaysOnTier, alwaysOnMonthlyAddOn } from "./always-on";
@@ -40,6 +41,7 @@ interface BuilderState {
   reorderSections: (projectId: string, from: number, to: number) => void;
   setTheme: (projectId: string, theme: Partial<ThemeTokens>) => void;
   applyG2P: (id: string, system?: StyleSystem) => void;
+  applyAnmosCopy: (id: string, copy: AnmosCopy) => void;
   deleteProject: (id: string) => void;
   setActiveProject: (id: string | null) => void;
   getProject: (id: string) => SiteProject | undefined;
@@ -241,6 +243,32 @@ export const useBuilderStore = create<BuilderState>()(
               g2pConfidence: g2p.confidence,
               updatedAt: new Date().toISOString(),
             };
+          }),
+        })),
+
+      applyAnmosCopy: (id, copy) =>
+        set((s) => ({
+          projects: s.projects.map((p) => {
+            if (p.id !== id) return p;
+            const overlay: Record<string, AnmosCopy[keyof AnmosCopy]> = {
+              hero: copy.hero,
+              features: copy.features,
+              about: copy.about,
+              cta: copy.cta,
+            };
+            const sections = p.sections.map((sec) => {
+              const next = overlay[sec.type];
+              if (!next) return sec;
+              return {
+                ...sec,
+                title: next.title || sec.title,
+                subtitle: next.subtitle || sec.subtitle,
+                body: next.body || sec.body,
+                ctaLabel: next.ctaLabel || sec.ctaLabel,
+                items: next.items?.length ? next.items : sec.items,
+              };
+            });
+            return { ...p, sections, updatedAt: new Date().toISOString() };
           }),
         })),
 
