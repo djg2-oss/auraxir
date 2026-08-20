@@ -54,6 +54,8 @@ export const runAnmosCopy = createServerFn({ method: "POST" })
     const packet = planAnmosBuild({
       description: data.description,
       desire: data.desire,
+      type: data.type,
+      name: data.name,
       apiLive,
     });
     const serana = writeKernelCopy(data);
@@ -77,7 +79,7 @@ export const runAnmosCopy = createServerFn({ method: "POST" })
     if (packet.schedule === "parallel") {
       const [dRaw, rRaw] = await Promise.all([
         grokCopyJson(brief, budget, "D"),
-        grokCopyJson(`${brief}\nIndependent second pass. Do not copy the first draft — you cannot see it.`, budget, "R"),
+        grokCopyJson(`${brief}\nIndependent first draft. You cannot see the other brain.`, budget, "R"),
       ]);
       const d = dRaw ? parseCopyJson(dRaw) : null;
       const r = rRaw ? parseCopyJson(rRaw) : null;
@@ -90,22 +92,23 @@ export const runAnmosCopy = createServerFn({ method: "POST" })
 
     const dRaw = await grokCopyJson(brief, budget, "D");
     const d = dRaw ? parseCopyJson(dRaw) : null;
-    if (d && copyScore(d) >= 80) {
+
+    if (packet.schedule === "backup" && d && copyScore(d) >= 80) {
       return { ok: true, packet, copy: mergeCopy(serana, d), source: "grok-4.6", model: ANMOS.engine };
     }
 
+    let r: AnmosCopy | null = null;
     if (packet.brains.r === "grok-4.6") {
-      const rRaw = await grokCopyJson(
-        d
-          ? `${brief}\nRefine this draft, keep facts, cut hype:\n${JSON.stringify(d)}`
-          : brief,
-        budget,
-        "R",
-      );
-      const r = rRaw ? parseCopyJson(rRaw) : null;
-      if (r) {
-        return { ok: true, packet, copy: mergeCopy(serana, r), source: "grok-4.6", model: ANMOS.engine };
-      }
+      const rPrompt = d
+        ? `${brief}\n\nDraft from brain D. Rewrite it. Keep facts. Cut hype. Stronger and tighter:\n${JSON.stringify(d)}`
+        : `${brief}\n\nBrain D missed. Write the copy now.`;
+      const rRaw = await grokCopyJson(rPrompt, budget, "R");
+      r = rRaw ? parseCopyJson(rRaw) : null;
+    }
+
+    const pick = !d ? r : !r ? d : copyScore(r) >= copyScore(d) * 0.92 ? r : d;
+    if (pick) {
+      return { ok: true, packet, copy: mergeCopy(serana, pick), source: "grok-4.6", model: ANMOS.engine };
     }
 
     return { ok: true, packet, copy: serana, source: "serana-fallback", model: ANMOS.writer };

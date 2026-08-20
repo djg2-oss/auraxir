@@ -26,6 +26,7 @@ export type AnmosPacket = {
   schedule: AnmosSchedule;
   why: string;
   budgetMs: number;
+  variance: number;
   brains: { d: AnmosEngine; r: AnmosEngine | "skip" };
   primary: AnmosEngine;
   backup: AnmosEngine;

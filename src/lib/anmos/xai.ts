@@ -1,5 +1,15 @@
+/** Same engine key names as Agent Black. One XAI_API_KEY covers both products. */
 function readXaiKey(): string {
-  const names = ["XAI_API_KEY", "xai_api_key", "CAI_API_KEY", "GROKG2PAI", "GROK_API_KEY"];
+  const names = [
+    "XAI_API_KEY",
+    "xai_api_key",
+    "CAI_API_KEY",
+    "cai_api_key",
+    "GROKG2PAI",
+    "grokg2pai",
+    "GROK_API_KEY",
+    "BLACK_API_KEY",
+  ];
   const bag = typeof process !== "undefined" ? process.env : {};
   for (const name of names) {
     const v = bag[name];
@@ -12,6 +22,9 @@ export function anmosApiLive() {
   return readXaiKey().length > 8;
 }
 
+const COPY_SHAPE =
+  "Return ONLY JSON: {hero:{title,subtitle,body,ctaLabel},features:{title,subtitle,items:[{title,body},{title,body},{title,body}]},about:{title,body},cta:{title,subtitle,ctaLabel}}. No hype. No invented metrics. No markdown.";
+
 export async function grokCopyJson(prompt: string, timeoutMs: number, brain: "D" | "R" = "D"): Promise<string> {
   const key = readXaiKey();
   if (key.length < 8) return "";
@@ -19,8 +32,8 @@ export async function grokCopyJson(prompt: string, timeoutMs: number, brain: "D"
   const t = setTimeout(() => ctrl.abort(), Math.max(400, timeoutMs));
   const role =
     brain === "R"
-      ? "You are ANMOS brain R (refine) — second grok-4.6 on the Auraxir builder. Improve or independently rewrite production copy. Return ONLY the same JSON shape. No hype. No invented metrics."
-      : "You are ANMOS on the Auraxir builder. Dual grok-4.6: this call is brain D (create). Agent Black is the OS. Write production website copy. Return ONLY JSON: {hero:{title,subtitle,body,ctaLabel},features:{title,subtitle,items:[{title,body},{title,body},{title,body}]},about:{title,body},cta:{title,subtitle,ctaLabel}}. No hype. No invented metrics. No markdown.";
+      ? `You are ANMOS brain R on the Auraxir builder. Engine: grok-4.6 by xAI. Product is Auraxir, not xAI. Refine the draft: tighter, clearer, still true. Keep facts. Cut hype. ${COPY_SHAPE}`
+      : `You are ANMOS brain D on the Auraxir builder. Engine: grok-4.6 by xAI. Product is Auraxir, not xAI. Write production website copy. ${COPY_SHAPE}`;
   try {
     const res = await fetch("https://api.x.ai/v1/chat/completions", {
       method: "POST",
@@ -31,7 +44,7 @@ export async function grokCopyJson(prompt: string, timeoutMs: number, brain: "D"
       signal: ctrl.signal,
       body: JSON.stringify({
         model: "grok-4.6",
-        temperature: brain === "R" ? 0.35 : 0.45,
+        temperature: brain === "R" ? 0.28 : 0.48,
         max_tokens: 900,
         messages: [
           { role: "system", content: role },
