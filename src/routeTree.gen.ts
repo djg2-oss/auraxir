@@ -14,6 +14,7 @@ import { Route as LegalRouteImport } from './routes/legal'
 import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as RecommendRouteImport } from './routes/recommend'
 import { Route as StartRouteImport } from './routes/start'
+import { Route as ApiHealthRouteImport } from './routes/api/health'
 import { Route as BuilderProjectIdRouteImport } from './routes/builder.$projectId'
 import { Route as LegalIndexRouteImport } from './routes/legal.index'
 import { Route as LegalDocRouteImport } from './routes/legal.$doc'
@@ -44,6 +45,11 @@ const StartRoute = StartRouteImport.update({
   path: '/start',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiHealthRoute = ApiHealthRouteImport.update({
+  id: '/api/health',
+  path: '/api/health',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BuilderProjectIdRoute = BuilderProjectIdRouteImport.update({
   id: '/builder/$projectId',
   path: '/builder/$projectId',
@@ -71,6 +77,7 @@ export interface FileRoutesByFullPath {
   '/projects': typeof ProjectsRoute
   '/recommend': typeof RecommendRoute
   '/start': typeof StartRoute
+  '/api/health': typeof ApiHealthRoute
   '/builder/$projectId': typeof BuilderProjectIdRoute
   '/legal/$doc': typeof LegalDocRoute
   '/preview/$projectId': typeof PreviewProjectIdRoute
@@ -81,6 +88,7 @@ export interface FileRoutesByTo {
   '/projects': typeof ProjectsRoute
   '/recommend': typeof RecommendRoute
   '/start': typeof StartRoute
+  '/api/health': typeof ApiHealthRoute
   '/builder/$projectId': typeof BuilderProjectIdRoute
   '/legal/$doc': typeof LegalDocRoute
   '/preview/$projectId': typeof PreviewProjectIdRoute
@@ -93,6 +101,7 @@ export interface FileRoutesById {
   '/projects': typeof ProjectsRoute
   '/recommend': typeof RecommendRoute
   '/start': typeof StartRoute
+  '/api/health': typeof ApiHealthRoute
   '/builder/$projectId': typeof BuilderProjectIdRoute
   '/legal/$doc': typeof LegalDocRoute
   '/preview/$projectId': typeof PreviewProjectIdRoute
@@ -106,6 +115,7 @@ export interface FileRouteTypes {
     | '/projects'
     | '/recommend'
     | '/start'
+    | '/api/health'
     | '/builder/$projectId'
     | '/legal/$doc'
     | '/preview/$projectId'
@@ -116,6 +126,7 @@ export interface FileRouteTypes {
     | '/projects'
     | '/recommend'
     | '/start'
+    | '/api/health'
     | '/builder/$projectId'
     | '/legal/$doc'
     | '/preview/$projectId'
@@ -127,6 +138,7 @@ export interface FileRouteTypes {
     | '/projects'
     | '/recommend'
     | '/start'
+    | '/api/health'
     | '/builder/$projectId'
     | '/legal/$doc'
     | '/preview/$projectId'
@@ -139,6 +151,7 @@ export interface RootRouteChildren {
   ProjectsRoute: typeof ProjectsRoute
   RecommendRoute: typeof RecommendRoute
   StartRoute: typeof StartRoute
+  ApiHealthRoute: typeof ApiHealthRoute
   BuilderProjectIdRoute: typeof BuilderProjectIdRoute
   PreviewProjectIdRoute: typeof PreviewProjectIdRoute
 }
@@ -178,6 +191,13 @@ declare module '@tanstack/react-router' {
       path: '/start'
       fullPath: '/start'
       preLoaderRoute: typeof StartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/health': {
+      id: '/api/health'
+      path: '/api/health'
+      fullPath: '/api/health'
+      preLoaderRoute: typeof ApiHealthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/builder/$projectId': {
@@ -229,6 +249,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProjectsRoute: ProjectsRoute,
   RecommendRoute: RecommendRoute,
   StartRoute: StartRoute,
+  ApiHealthRoute: ApiHealthRoute,
   BuilderProjectIdRoute: BuilderProjectIdRoute,
   PreviewProjectIdRoute: PreviewProjectIdRoute,
 }

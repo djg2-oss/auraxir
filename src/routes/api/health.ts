@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ANMOS } from "@/lib/anmos";
 import { anmosApiLive } from "@/lib/anmos/xai";
 
-export const Route = createFileRoute("/api/health" as never)({
+export const Route = createFileRoute("/api/health")({
   server: {
     handlers: {
       GET: () =>
