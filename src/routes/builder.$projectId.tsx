@@ -25,6 +25,7 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { BrandMark } from "@/components/brand-mark";
+import { ColorLabPanel } from "@/components/color-lab-panel";
 import { G2PStyleSwatches, G2PTrainingNote } from "@/components/g2p-panel";
 import { QuoteSummary } from "@/components/price-card";
 import { ProductionScoreCard } from "@/components/production-panel";
@@ -69,7 +70,7 @@ function BuilderPage() {
   const undo = useBuilderStore((s) => s.undo);
   const redo = useBuilderStore((s) => s.redo);
 
-  const [panel, setPanel] = useState<"sections" | "theme" | "g2p" | "enhance" | "shield" | "site">("sections");
+  const [panel, setPanel] = useState<"sections" | "theme" | "g2p" | "enhance" | "shield" | "site" | "lab">("sections");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [device, setDevice] = useState<"phone" | "tablet" | "desktop">("desktop");
@@ -274,6 +275,7 @@ function BuilderPage() {
               [
                 ["sections", "Sections"],
                 ["theme", "Theme"],
+                ["lab", "Lab"],
                 ["g2p", "G2P AI"],
                 ["enhance", "Imago"],
                 ["shield", "Shield"],
@@ -528,6 +530,8 @@ function BuilderPage() {
                 )}
               </div>
             )}
+
+            {panel === "lab" && <ColorLabPanel project={project} />}
 
             {panel === "theme" && (
               <div className="space-y-4">

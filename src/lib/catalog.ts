@@ -186,6 +186,8 @@ export interface SiteProject {
   shieldTier?: "core" | "shield" | "shield-max";
   shieldAddOnMonthly?: number;
   shieldScore?: number;
+  labPaletteId?: string;
+  labImages?: string[];
 }
 
 

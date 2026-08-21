@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 
 const nav = [
   { to: "/", label: "Home" },
+  { to: "/lab", label: "Lab" },
   { to: "/start", label: "Match" },
   { to: "/projects", label: "Projects" },
   { to: "/legal", label: "Legal" },

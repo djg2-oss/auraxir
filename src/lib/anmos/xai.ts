@@ -22,6 +22,10 @@ export function anmosApiLive() {
   return readXaiKey().length > 8;
 }
 
+export function anmosXaiKey() {
+  return readXaiKey();
+}
+
 const COPY_SHAPE =
   "Return ONLY JSON: {hero:{title,subtitle,body,ctaLabel},features:{title,subtitle,items:[{title,body},{title,body},{title,body}]},about:{title,body},cta:{title,subtitle,ctaLabel}}. No hype. No invented metrics. No markdown.";
 

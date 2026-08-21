@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { PALETTES, WORKS } from "@/lib/showcase";
 import { cn } from "@/lib/utils";
@@ -92,7 +93,7 @@ export function AerStudio() {
         The studio is the color lab.
       </h2>
       <p className="mt-3 max-w-xl text-sm text-[var(--color-fg-muted)]">
-        Not a studio you book. A lab of stills — the colorations Auraxir actually uses.
+        Examples of the colorations we use. You brand your own site after you subscribe.
       </p>
       <div className="mt-6 flex flex-wrap gap-2">
         {PALETTES.map((p) => (
@@ -125,6 +126,13 @@ export function AerStudio() {
             ))}
           </div>
           <p className="mt-3 font-mono text-[10px] tracking-wider opacity-60">{pal.colors.join("  ")}</p>
+          <p className="mt-4 text-sm opacity-80">
+            <Link to="/lab" className="text-inherit underline-offset-4 hover:underline">
+              Full example lab
+            </Link>
+            {" · "}
+            brand yours in the builder after you subscribe.
+          </p>
         </figcaption>
       </figure>
     </div>
