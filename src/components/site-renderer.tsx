@@ -94,7 +94,8 @@ function SectionBlock({
             background: `radial-gradient(ellipse 80% 60% at 70% 20%, ${theme.accent}55, transparent 60%)`,
           }}
         />
-        <div className="relative mx-auto max-w-3xl">
+        <div className="relative mx-auto grid max-w-5xl items-end gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+          <div>
           {section.isTieIn && (
             <p className="mb-2 text-[10px] font-medium uppercase tracking-[0.14em] opacity-60">
               Imago · Image standard
@@ -129,6 +130,15 @@ function SectionBlock({
               {section.ctaLabel}
             </a>
           )}
+          </div>
+          {section.imageSrc ? (
+            <img
+              src={section.imageSrc}
+              alt=""
+              className="hidden aspect-[4/5] w-full object-cover lg:block"
+              style={{ borderRadius: r }}
+            />
+          ) : null}
         </div>
       </section>
     );

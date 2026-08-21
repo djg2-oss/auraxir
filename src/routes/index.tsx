@@ -82,9 +82,9 @@ function LandingPage() {
                 </Link>
               </Button>
               <Button asChild size="lg" variant="secondary">
-                <Link to="/start" search={{ mode: "express" }}>
+                <Link to="/sample">
                   <Zap className="size-4" />
-                  Express match
+                  Live sample
                 </Link>
               </Button>
             </div>

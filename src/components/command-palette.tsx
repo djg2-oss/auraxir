@@ -23,6 +23,7 @@ export function CommandPalette() {
 
   const items = useMemo(() => {
     const base = [
+      { id: "sample", label: "Live sample", run: () => navigate({ to: "/sample" }) },
       { id: "lab", label: "Color lab", run: () => navigate({ to: "/lab" }) },
       { id: "match", label: "New match", run: () => navigate({ to: "/start", search: { mode: "full" } }) },
       { id: "express", label: "Express match", run: () => navigate({ to: "/start", search: { mode: "express" } }) },

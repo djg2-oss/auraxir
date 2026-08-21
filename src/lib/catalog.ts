@@ -149,6 +149,8 @@ export interface SiteSection {
   items: { title: string; body: string }[];
   visible: boolean;
   /** Auraxir seamless enhancement page */
+  /** Optional still for sample / Imago heroes */
+  imageSrc?: string;
   isTieIn?: boolean;
   pageSlug?: string;
   enhancementId?: string;
