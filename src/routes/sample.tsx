@@ -9,17 +9,21 @@ import { useBuilderStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/sample")({
+  validateSearch: (s: Record<string, unknown>): { kind?: SampleKindId } => ({
+    kind: SAMPLE_KINDS.some((k) => k.id === s.kind) ? (s.kind as SampleKindId) : undefined,
+  }),
   component: SamplePage,
 });
 
 function SamplePage() {
   const navigate = useNavigate();
+  const { kind: kindFromUrl } = Route.useSearch();
   const createFromNeeds = useBuilderStore((s) => s.createProjectFromNeeds);
   const setNeeds = useBuilderStore((s) => s.setNeeds);
   const setLookFeel = useBuilderStore((s) => s.setLookFeel);
   const updateProject = useBuilderStore((s) => s.updateProject);
   const setTheme = useBuilderStore((s) => s.setTheme);
-  const [kindId, setKindId] = useState<SampleKindId>("music");
+  const [kindId, setKindId] = useState<SampleKindId>(kindFromUrl ?? "music");
   const [name, setName] = useState("");
   const sample = useMemo(() => buildSample(kindId, name || undefined), [kindId, name]);
 
@@ -68,6 +72,7 @@ function SamplePage() {
                 onClick={() => {
                   setKindId(k.id);
                   setName("");
+                  void navigate({ to: "/sample", search: { kind: k.id } });
                 }}
                 className={cn(
                   "rounded-full border px-3 py-1.5 text-xs",

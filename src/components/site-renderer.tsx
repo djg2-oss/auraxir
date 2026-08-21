@@ -84,18 +84,25 @@ function SectionBlock({
         data-section="hero"
         data-tie-in={section.isTieIn ? "1" : "0"}
         data-prod={production ? "1" : "0"}
-        className="relative overflow-hidden px-6 py-16 sm:px-10 sm:py-24"
+        className="relative overflow-hidden px-6 py-16 sm:px-10 sm:py-28"
         style={{ background: theme.primary, color: heroFg }}
       >
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 opacity-40"
-          style={{
-            background: `radial-gradient(ellipse 80% 60% at 70% 20%, ${theme.accent}55, transparent 60%)`,
-          }}
-        />
-        <div className="relative mx-auto grid max-w-5xl items-end gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-          <div>
+        {section.imageSrc ? (
+          <img
+            src={section.imageSrc}
+            alt=""
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-45"
+          />
+        ) : (
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-40"
+            style={{
+              background: `radial-gradient(ellipse 80% 60% at 70% 20%, ${theme.accent}55, transparent 60%)`,
+            }}
+          />
+        )}
+        <div className="relative mx-auto max-w-3xl">
           {section.isTieIn && (
             <p className="mb-2 text-[10px] font-medium uppercase tracking-[0.14em] opacity-60">
               Imago · Image standard
@@ -130,15 +137,6 @@ function SectionBlock({
               {section.ctaLabel}
             </a>
           )}
-          </div>
-          {section.imageSrc ? (
-            <img
-              src={section.imageSrc}
-              alt=""
-              className="hidden aspect-[4/5] w-full object-cover lg:block"
-              style={{ borderRadius: r }}
-            />
-          ) : null}
         </div>
       </section>
     );
@@ -198,6 +196,14 @@ function SectionBlock({
             {section.body}
           </p>
         )}
+        {section.type === "gallery" && section.imageSrc ? (
+          <img
+            src={section.imageSrc}
+            alt=""
+            className="mt-8 aspect-[16/8] w-full object-cover"
+            style={{ borderRadius: r }}
+          />
+        ) : null}
         {section.items.length > 0 && (
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {section.items.map((item, i) => (

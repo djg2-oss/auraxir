@@ -36,6 +36,7 @@ import {
 } from "@/lib/brand";
 import { API_GUI_ADMISSION } from "@/lib/builders";
 import { GUIDE, PATH_OPTIONS } from "@/lib/guide";
+import { SAMPLE_KINDS } from "@/lib/sample-build";
 
 export const Route = createFileRoute("/")({
   component: LandingPage,
@@ -87,6 +88,18 @@ function LandingPage() {
                   Live sample
                 </Link>
               </Button>
+            </div>
+            <div className="mt-8 flex flex-wrap gap-2">
+              {SAMPLE_KINDS.map((k) => (
+                <Link
+                  key={k.id}
+                  to="/sample"
+                  search={{ kind: k.id }}
+                  className="rounded-full border border-[var(--color-border)] px-3 py-1.5 text-xs text-[var(--color-fg-muted)] no-underline hover:border-[var(--color-gold)] hover:text-[var(--color-fg)]"
+                >
+                  {k.label}
+                </Link>
+              ))}
             </div>
           </div>
           <figure className="overflow-hidden rounded-[var(--radius-xl)] border border-[var(--color-border)]">
