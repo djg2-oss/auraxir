@@ -46,44 +46,36 @@ function LandingPage() {
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-[var(--color-border)]">
         <div
-          className="pointer-events-none absolute inset-0 opacity-40"
+          className="pointer-events-none absolute inset-0 opacity-50"
           style={{
             background:
-              "radial-gradient(ellipse 80% 60% at 18% -8%, #c9a22728, transparent 55%)",
+              "radial-gradient(ellipse 70% 50% at 12% -10%, color-mix(in oklab, var(--color-gold) 22%, transparent), transparent 58%)",
           }}
         />
-        <div className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+        <div className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-28">
           <div className="flex flex-wrap items-center gap-2">
             <Badge variant="outline">
               <Target className="mr-1 size-3" />
               {BRAND.qualityMark}
             </Badge>
             <G2PModelBadge />
-            <Badge variant="accent">{BRAND.domain}</Badge>
           </div>
 
-          <h1 className="mt-6 max-w-3xl text-4xl font-semibold tracking-tight text-[var(--color-fg)] sm:text-5xl lg:text-6xl">
+          <h1 className="mt-8 max-w-3xl font-[family-name:var(--font-display)] text-5xl font-semibold leading-[1.05] tracking-tight text-[var(--color-fg)] sm:text-6xl lg:text-7xl">
             {BRAND.name}
-            <span className="mt-3 block text-2xl font-medium text-[var(--color-fg-muted)] sm:text-3xl">
-              {BRAND.superiority}
-            </span>
           </h1>
-
-          <p className="mt-4 text-lg font-medium text-[var(--color-fg)]">
-            Dual hosted brains on Agent Black. Serana only if they miss.
+          <p className="mt-5 max-w-2xl text-xl font-medium leading-snug text-[var(--color-gold)] sm:text-2xl">
+            {BRAND.tagline}
           </p>
-          <p className="mt-2 max-w-2xl text-base text-[var(--color-fg-muted)]">
-            {BRAND.promise}
-          </p>
-          <p className="mt-3 max-w-xl text-sm text-[var(--color-fg-subtle)]">
-            {GUIDE.tagline} We cost more because we are for the elite.
+          <p className="mt-5 max-w-xl text-base text-[var(--color-fg-muted)]">
+            {BRAND.superiority} We cost more because the people who choose us do not shop the middle.
           </p>
           <EngineCredit className="mt-4" />
 
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-10 flex flex-wrap gap-3">
             <Button asChild size="lg">
               <Link to="/start" search={{ mode: "full" }}>
-                Get matched
+                Choose Auraxir
                 <ArrowRight />
               </Link>
             </Button>
@@ -92,9 +84,6 @@ function LandingPage() {
                 <Zap className="size-4" />
                 Express match
               </Link>
-            </Button>
-            <Button asChild size="lg" variant="ghost">
-              <Link to="/legal">Legal</Link>
             </Button>
           </div>
 

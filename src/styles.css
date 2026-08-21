@@ -2,9 +2,9 @@
 @import "tw-animate-css";
 
 @theme {
-  --font-sans: "Segoe UI", system-ui, -apple-system, sans-serif;
-  --font-display: "Segoe UI", system-ui, -apple-system, sans-serif;
-  --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --font-sans: "Source Sans 3", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-display: "Cormorant Garamond", "Iowan Old Style", Georgia, serif;
+  --font-serif: "Cormorant Garamond", "Iowan Old Style", Palatino, Georgia, serif;
   --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
   --color-bg: #0a0a0b;
@@ -15,9 +15,11 @@
   --color-fg-subtle: #71717a;
   --color-border: #27272a;
   --color-border-strong: #3f3f46;
-  --color-accent: #d4d4d8;
+  --color-accent: #c4b08a;
   --color-accent-fg: #0a0a0b;
-  --color-primary: #e4e4e7;
+  --color-gold: #c4b08a;
+  --color-gold-dim: #8a7a5a;
+  --color-primary: #e8e2d4;
   --color-primary-fg: #09090b;
   --color-card: #121214;
   --color-ring: #a1a1aa;

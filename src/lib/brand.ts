@@ -13,9 +13,9 @@ export const BRAND = {
   superiority: "The superior standard in elite websites & apps",
   productionSeal: "Auraxir Elite Quality Service",
   qualityMark: "Elite Quality Service",
-  tagline: "Elite websites and apps. Image is everything.",
+  tagline: "The house they choose when the work has to look like money.",
   promise:
-    "You build on Auraxir. ANMOS is the operating system — G2P Agent Black with two hosted brains on this builder. Look is G2P. GPU is RunPod and Modal. If both hosted brains miss, Serana writes on this computer. Dual FE/BE when you must stay online.",
+    "You do not rent a builder. You retain a house. ANMOS runs dual hosted brains on G2P Agent Black. Look is G2P. If they miss, Serana writes on this computer. Dual FE/BE when you must stay online.",
   /** Primary public domain */
   domain: "auraxir.com",
   supportEmail: "concierge@auraxir.com",

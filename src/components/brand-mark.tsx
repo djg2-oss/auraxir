@@ -12,22 +12,32 @@ export function BrandMark({
   showWordmark?: boolean;
 }) {
   const box = size === "sm" ? "size-7" : size === "lg" ? "size-10" : "size-8";
-  const icon = size === "sm" ? "size-3.5" : size === "lg" ? "size-5" : "size-4";
-  const text = size === "sm" ? "text-sm" : size === "lg" ? "text-lg" : "text-base";
 
   return (
     <span className={cn("inline-flex items-center gap-2.5", className)}>
       <span
         className={cn(
-          "flex items-center justify-center rounded-[var(--radius-sm)] border border-[var(--color-border-strong)] bg-[var(--color-bg-elevated)]",
+          "flex items-center justify-center rounded-[var(--radius-sm)] border border-[var(--color-gold-dim)] bg-[var(--color-bg-elevated)]",
           box,
         )}
       >
-        <ShieldCheck className={cn(icon, "text-[var(--color-fg)]")} strokeWidth={2} />
+        <span
+          className={cn(
+            "font-[family-name:var(--font-display)] font-semibold leading-none text-[var(--color-gold)]",
+            size === "sm" ? "text-sm" : size === "lg" ? "text-xl" : "text-base",
+          )}
+        >
+          A
+        </span>
       </span>
       {showWordmark && (
         <span className="flex flex-col leading-none">
-          <span className={cn("font-semibold tracking-tight text-[var(--color-fg)]", text)}>
+          <span
+            className={cn(
+              "font-[family-name:var(--font-display)] font-semibold tracking-tight text-[var(--color-fg)]",
+              size === "sm" ? "text-lg" : size === "lg" ? "text-2xl" : "text-xl",
+            )}
+          >
             {BRAND.name}
           </span>
           {size !== "sm" && (
