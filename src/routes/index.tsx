@@ -21,6 +21,7 @@ import { G2PModelBadge } from "@/components/g2p-panel";
 import { ImagoMarketingSection } from "@/components/imago-marketing";
 import { MarketingPhraseWall, SeoFaqSection } from "@/components/marketing-seo";
 import { ElitePricingBanner, ModelStrip } from "@/components/price-card";
+import { ShowcaseHouse } from "@/components/showcase-house";
 import { ShieldMarketingSection } from "@/components/shield-panel";
 import { AppChrome } from "@/components/site-shell";
 import { Badge } from "@/components/ui/badge";
@@ -52,49 +53,55 @@ function LandingPage() {
               "radial-gradient(ellipse 70% 50% at 12% -10%, color-mix(in oklab, var(--color-gold) 22%, transparent), transparent 58%)",
           }}
         />
-        <div className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-28">
-          <div className="flex flex-wrap items-center gap-2">
-            <Badge variant="outline">
-              <Target className="mr-1 size-3" />
-              {BRAND.qualityMark}
-            </Badge>
-            <G2PModelBadge />
-          </div>
+        <div className="relative mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 sm:px-6 sm:py-24 lg:grid-cols-[1fr_1.05fr]">
+          <div>
+            <div className="flex flex-wrap items-center gap-2">
+              <Badge variant="outline">
+                <Target className="mr-1 size-3" />
+                {BRAND.qualityMark}
+              </Badge>
+              <G2PModelBadge />
+            </div>
 
-          <h1 className="mt-8 max-w-3xl font-[family-name:var(--font-display)] text-5xl font-semibold leading-[1.05] tracking-tight text-[var(--color-fg)] sm:text-6xl lg:text-7xl">
-            {BRAND.name}
-          </h1>
-          <p className="mt-5 max-w-2xl text-xl font-medium leading-snug text-[var(--color-gold)] sm:text-2xl">
-            {BRAND.tagline}
-          </p>
-          <p className="mt-5 max-w-xl text-base text-[var(--color-fg-muted)]">
-            {BRAND.superiority} We cost more because the people who choose us do not shop the middle.
-          </p>
-          <EngineCredit className="mt-4" />
+            <h1 className="mt-8 max-w-3xl font-[family-name:var(--font-display)] text-5xl font-semibold leading-[1.05] tracking-tight text-[var(--color-fg)] sm:text-6xl lg:text-7xl">
+              {BRAND.name}
+            </h1>
+            <p className="mt-5 max-w-2xl text-xl font-medium leading-snug text-[var(--color-gold)] sm:text-2xl">
+              {BRAND.tagline}
+            </p>
+            <p className="mt-5 max-w-xl text-base text-[var(--color-fg-muted)]">
+              {BRAND.superiority} We cost more because the people who choose us do not shop the middle.
+            </p>
+            <EngineCredit className="mt-4" />
 
-          <div className="mt-10 flex flex-wrap gap-3">
-            <Button asChild size="lg">
-              <Link to="/start" search={{ mode: "full" }}>
-                Choose Auraxir
-                <ArrowRight />
-              </Link>
-            </Button>
-            <Button asChild size="lg" variant="secondary">
-              <Link to="/start" search={{ mode: "express" }}>
-                <Zap className="size-4" />
-                Express match
-              </Link>
-            </Button>
+            <div className="mt-10 flex flex-wrap gap-3">
+              <Button asChild size="lg">
+                <Link to="/start" search={{ mode: "full" }}>
+                  Choose Auraxir
+                  <ArrowRight />
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="secondary">
+                <Link to="/start" search={{ mode: "express" }}>
+                  <Zap className="size-4" />
+                  Express match
+                </Link>
+              </Button>
+            </div>
           </div>
+          <figure className="overflow-hidden rounded-[var(--radius-xl)] border border-[var(--color-border)]">
+            <img
+              src="/showcase/devices.jpg"
+              alt="Auraxir work on laptop and phone"
+              className="aspect-[16/10] w-full object-cover"
+            />
+          </figure>
+        </div>
+      </section>
 
-          <div className="mt-10 flex flex-wrap gap-x-6 gap-y-2 text-xs text-[var(--color-fg-subtle)]">
-            {BRAND.modelLines.slice(0, 4).map((line) => (
-              <span key={line} className="inline-flex items-center gap-1.5">
-                <Check className="size-3.5 text-[var(--color-fg-muted)]" />
-                {line}
-              </span>
-            ))}
-          </div>
+      <section className="border-b border-[var(--color-border)] bg-[var(--color-bg)]">
+        <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+          <ShowcaseHouse />
         </div>
       </section>
 

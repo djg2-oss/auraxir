@@ -104,3 +104,54 @@
     }
   }
 }
+
+/* Showcase — 3D site models, meters, reels */
+.site-stage {
+  perspective: 1400px;
+  perspective-origin: 50% 40%;
+}
+.site-model {
+  transform-style: preserve-3d;
+  transform: rotateY(-22deg) rotateX(10deg);
+  transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.site-model:hover {
+  transform: rotateY(-12deg) rotateX(6deg) translateY(-6px);
+}
+.site-model-phone {
+  transform: rotateY(18deg) rotateX(8deg);
+}
+.site-model-phone:hover {
+  transform: rotateY(10deg) rotateX(4deg) translateY(-6px);
+}
+.vu {
+  animation: vu 1.1s ease-in-out infinite;
+  transform-origin: bottom;
+}
+.vu:nth-child(2n) { animation-duration: 0.85s; animation-delay: 0.1s; }
+.vu:nth-child(3n) { animation-duration: 1.35s; animation-delay: 0.2s; }
+.vu:nth-child(5n) { animation-duration: 0.7s; }
+@keyframes vu {
+  0%, 100% { transform: scaleY(0.28); opacity: 0.55; }
+  40% { transform: scaleY(1); opacity: 1; }
+  70% { transform: scaleY(0.5); opacity: 0.8; }
+}
+.reel {
+  animation: reel 22s linear infinite;
+}
+@keyframes reel {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.tc {
+  font-variant-numeric: tabular-nums;
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-model,
+  .site-model-phone,
+  .vu,
+  .reel {
+    animation: none;
+    transition: none;
+  }
+}
